@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>微信小程序 | 泥匠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="微信小程序开发:MINA原文  https://segmentfault.com/a/1190000007000249
+MINA是微信开发小程序的框架：MINA的目标是通过尽可能简单，高效的方式让开发者可以在微信中开发具有原生APP体验的服务。
+运行MINA的项目必须要有 微信web开发者工具 和 微信小程序的AppID ，因为现在还处于内测阶段的原因，因此大部分数人还没有 AppID ,还好有大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信小程序">
+<meta property="og:url" content="http://zekunruan.github.io/2016/09/25/i-have-a-new-home/index.html">
+<meta property="og:site_name" content="泥匠">
+<meta property="og:description" content="微信小程序开发:MINA原文  https://segmentfault.com/a/1190000007000249
+MINA是微信开发小程序的框架：MINA的目标是通过尽可能简单，高效的方式让开发者可以在微信中开发具有原生APP体验的服务。
+运行MINA的项目必须要有 微信web开发者工具 和 微信小程序的AppID ，因为现在还处于内测阶段的原因，因此大部分数人还没有 AppID ,还好有大">
+<meta property="og:updated_time" content="2016-09-25T14:51:48.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="微信小程序">
+<meta name="twitter:description" content="微信小程序开发:MINA原文  https://segmentfault.com/a/1190000007000249
+MINA是微信开发小程序的框架：MINA的目标是通过尽可能简单，高效的方式让开发者可以在微信中开发具有原生APP体验的服务。
+运行MINA的项目必须要有 微信web开发者工具 和 微信小程序的AppID ，因为现在还处于内测阶段的原因，因此大部分数人还没有 AppID ,还好有大">
+  
+    <link rel="alternative" href="/atom.xml" title="泥匠" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//favicon.png">
+  
+  <script src="/style.js"></script>
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="null" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zekun ruan</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">一笔一划。</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔">随笔</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">zekun ruan</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="null" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zekun ruan</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">一笔一划。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-i-have-a-new-home" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      微信小程序
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="微信小程序开发-MINA"><a href="#微信小程序开发-MINA" class="headerlink" title="微信小程序开发:MINA"></a>微信小程序开发:MINA</h2><p>原文  <a href="https://segmentfault.com/a/1190000007000249" target="_blank" rel="external">https://segmentfault.com/a/1190000007000249</a></p>
+<h3 id="MINA是微信开发小程序的框架："><a href="#MINA是微信开发小程序的框架：" class="headerlink" title="MINA是微信开发小程序的框架："></a>MINA是微信开发小程序的框架：</h3><p>MINA的目标是通过尽可能简单，高效的方式让开发者可以在微信中开发具有原生APP体验的服务。</p>
+<p>运行MINA的项目必须要有 微信web开发者工具 和 微信小程序的AppID ，因为现在还处于内测阶段的原因，因此大部分数人还没有 AppID ,还好有大神已经破解了IDE，可以先体验下。</p>
+<a id="more"></a>
+<p>MINA框架中有四种类型的文件:</p>
+<ul>
+<li><p>.js 文件 基于JavaScript的逻辑层框架</p>
+</li>
+<li><p>.wxml 视图层文件，是MINA设计的一套标签语言</p>
+</li>
+<li><p>.wxss 样式文件，用于描述WXML的组件样式</p>
+</li>
+<li><p>.json 文件，配置文件，用于单个页面的配置和整个项目的配置</p>
+</li>
+</ul>
+<h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><p>为了减少配置项，小程序中一个页面中的四个文件必须要有相同的路径和文件名,使用 微信web开发者工具 新建一个项目,可以看到他的目录结构是这样的：</p>
+<p>其中 app.js 是程序的入口， app.json 是项目的配置文件, app.wxss 是全局配置的样式文件, logs 和 index 文件夹是是单个页面的文件， utils 用来存放常用的工具类文件夹。</p>
+<h3 id="app-js"><a href="#app-js" class="headerlink" title="app.js"></a>app.js</h3><p>app.js 使用 App() 函数注册一个小程序，可以指定小程序的生命周期</p>
+<p>小程序的 App() 生命周期中三个事件可以监听: onLaunch ， onShow ， onHide 。</p>
+<ul>
+<li><p>onLaunch ：小程序加载完成之后调用,全局只触发一次</p>
+</li>
+<li><p>onShow ： 小程序启动，或者从后台到前台会触发一次</p>
+</li>
+<li><p>onHide ：小程序从前台到后台会触发一次</p>
+</li>
+</ul>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">	App(&#123; </div><div class="line"> onLaunch: function () &#123; </div><div class="line">    console.log(&apos;App Launch&apos;)</div><div class="line">  &#125;, </div><div class="line"> onShow: function () &#123;</div><div class="line">    console.log(&apos;App Show&apos;)  </div><div class="line">&#125;,  </div><div class="line">onHide: function () &#123;</div><div class="line">    console.log(&apos;App Hide&apos;)  </div><div class="line">&#125;, </div><div class="line"> globalData: &#123;</div><div class="line">    hasLogin: false  </div><div class="line">&#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>其中 app.js 的 globalData 可以设置全局的变量,在一个页面中可以通过 getApp() 函数获取小程序的实例，使用App的 getCurrentPage() 可以获取到当前页面的实例。</p>
+<h3 id="app-json"><a href="#app-json" class="headerlink" title="app.json"></a>app.json</h3><p>app.json 是小程序的全局配置包括:页面的路径，窗口表现，设置网络超时,开发模式等…</p>
+<p>页面配置 pages :设置页面的路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&quot;pages&quot;:[</div><div class="line">   &quot;pages/index/index&quot;,</div><div class="line">   &quot;pages/logs/logs&quot;</div><div class="line"> ]</div></pre></td></tr></table></figure>
+<p>配置的 index 和 logs 两个页面的路径,在这里使用相对路径配置页面路径。</p>
+<p>窗口配置 windows ：用来配置状态栏的颜色，导航条的样式和颜色，标题，已经窗口的背景色:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&quot;window&quot;:&#123;</div><div class="line">  &quot;backgroundTextStyle&quot;:&quot;light&quot;,</div><div class="line">  &quot;navigationBarBackgroundColor&quot;: &quot;#ffffff&quot;,</div><div class="line">  &quot;navigationBarTitleText&quot;: &quot;WeChat&quot;,</div><div class="line">  &quot;navigationBarTextStyle&quot;:&quot;black&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用的Color为十六进制的颜色值,比如”#ffffff”</p>
+<p>注意:</p>
+<p>其中 navigationBarTextStyle ，导航栏的颜色仅支持 black/white 。</p>
+<p>而 backgroundTextStyle ，下拉背景的样式仅支持 dark/light 。</p>
+<p>tabBar : 设置tab应用， tabBar 是一个数组，最少需要配置2个，最多能配置5个tab，tab按照数据的顺序排序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&quot;tabBar&quot;:&#123;</div><div class="line">    &quot;color&quot;:&quot;#dddddd&quot;,</div><div class="line">    &quot;selectdColor&quot;:&quot;#3cc51f&quot;,</div><div class="line">    &quot;borderStyle&quot;:&quot;black&quot;,</div><div class="line">    &quot;backgroundColor&quot;:&quot;#ffffff&quot;</div><div class="line">  ,&quot;list&quot;:[</div><div class="line">    &#123;</div><div class="line">      &quot;pagePath&quot;:&quot;pages/index/index&quot;,</div><div class="line">      &quot;iconPath&quot;:&quot;image/wechat.png&quot;,</div><div class="line">      &quot;selectedIconPath&quot;:&quot;image/wechatHL.png&quot;,</div><div class="line">      &quot;text&quot;:&quot;主页&quot;</div><div class="line">      &#125;,&#123;</div><div class="line">    &quot;pagePath&quot;:&quot;pages/logs/logs&quot;,</div><div class="line">    &quot;iconPath&quot;:&quot;image/wechat.png&quot;,</div><div class="line">    &quot;selectedIconPath&quot;:&quot;image/wechatHL.png&quot;,</div><div class="line">    &quot;text&quot;:&quot;日志&quot;</div><div class="line">  &#125;]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里设置了两个tab页: index 和 log ，效果如下:</p>
+<p>networkTimeout 设置网络请求的超时时间,小程序有四种类型的网络请求</p>
+<ul>
+<li><p>wx.request 普通的http请求，配置为 request</p>
+</li>
+<li><p>wx.connect stock链接,配置为 connectSocket</p>
+</li>
+<li><p>wx.uploadFile 上传文件,配置为 uploadFile</p>
+</li>
+<li><p>wx.downloadFile 下载文件,配置为 downloadFile<br>配置单位为毫秒,例如：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&quot;networkTimeout&quot;: &#123;</div><div class="line">  &quot;request&quot;: 10000,</div><div class="line">  &quot;connectSocket&quot;: 10000,</div><div class="line">  &quot;uploadFile&quot;: 10000,</div><div class="line">  &quot;downloadFile&quot;: 10000</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>debug :开发工具中开启debug模式，在控制台面板上可以看到调试信息,我们也可以使用 console.log(‘onLoad’) 输入log帮助我们调试程序。</p>
+<p>“debug”: true</p>
+<h3 id="app-wxss"><a href="#app-wxss" class="headerlink" title="app.wxss"></a>app.wxss</h3><p>app.wxss 中定义的的样式为全局样式，作用在每一个页面，在page中定义的 .wxss 文件为局部样式，只作用在局部，局部样式中的定义会覆盖 app.wxss 中定义的样式。</p>
+<p>样式的定义:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  .container &#123;</div><div class="line">  height: 100%;</div><div class="line">  display: flex;</div><div class="line">  flex-direction: column;</div><div class="line">  align-items: center;</div><div class="line">  justify-content: space-between;</div><div class="line">  padding: 200rpx 0;</div><div class="line">  box-sizing: border-box;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中 200rpx 中的 rpx 是 reponslve pixel ，可以根据屏幕的宽度进行自适应，在 iPhone6 上 1rpx=0.5px=1 物理像素。微信小程序建议设计以 iPhone6 为准</p>
+<p>样式的使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;view class=&quot;container&quot;&gt;</div><div class="line">&lt;/view&gt;</div></pre></td></tr></table></figure>
+<h3 id="page"><a href="#page" class="headerlink" title="page"></a>page</h3><p>使用Page()函数来注册一个页面，为其指定页面的初始数据，生命周期函数，事件处理等。</p>
+<p>data 页面的初始数据，可以使用setData更新定义的数据</p>
+<ul>
+<li><p>onLoad 页面加载事件</p>
+</li>
+<li><p>onReady 页面渲染完成</p>
+</li>
+<li><p>onShow 页面显示</p>
+</li>
+<li><p>onHide 页面隐藏</p>
+</li>
+<li><p>onUnload 页面卸载</p>
+</li>
+</ul>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">  Page(&#123;</div><div class="line">  data: &#123;</div><div class="line">    logs: []</div><div class="line">  &#125;,</div><div class="line">  onLoad: function () &#123;</div><div class="line">    this.setData(&#123;</div><div class="line">      logs: (wx.getStorageSync(&apos;logs&apos;) || []).map(function (log) &#123;</div><div class="line">        return util.formatTime(new Date(log))</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>page另外使用的文件 .wxml 是页面文件，使用定义好一套标签语言， .wxss 是局部样式文件， .json 局部配置文件比如需要在一个单独的页面中设置他的 navigationBarTitleText ,可以在 .json 文件中设置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    &quot;navigationBarTitleText&quot;: &quot;日志文件&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>源代码地址: <a href="https://github.com/jjz/weixin-mina" target="_blank" rel="external">https://github.com/jjz/weixin-mina</a></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/09/25/i-have-a-new-home/" class="archive-article-date">
+  	<time datetime="2016-09-24T16:31:28.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-09-25</time>
+</a>
+      
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/09/25/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Markdown 11种基本语法</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 zekun ruan
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接1</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接2</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接3</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接4</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接5</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接6</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
