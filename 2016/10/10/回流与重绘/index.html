@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>回流与重绘 | 泥匠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在讨论页面重绘、回流之前。需要对页面的呈现流程有些了解，页面是怎么把html结合css等显示到浏览器上的，下面的流程图显示了浏览器对页面的呈现的处理流程。可能不同的浏览器略微会有些不同。但基本上都是类似的。
+
+浏览器把获取到的HTML代码解析成1个DOM树，HTML中的每个tag都是DOM树中的1个节点，根节点就是我们常用的document对象。DOM树里包含了所有HTML标签，包括display">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回流与重绘">
+<meta property="og:url" content="http://zekunruan.github.io/2016/10/10/回流与重绘/index.html">
+<meta property="og:site_name" content="泥匠">
+<meta property="og:description" content="在讨论页面重绘、回流之前。需要对页面的呈现流程有些了解，页面是怎么把html结合css等显示到浏览器上的，下面的流程图显示了浏览器对页面的呈现的处理流程。可能不同的浏览器略微会有些不同。但基本上都是类似的。
+
+浏览器把获取到的HTML代码解析成1个DOM树，HTML中的每个tag都是DOM树中的1个节点，根节点就是我们常用的document对象。DOM树里包含了所有HTML标签，包括display">
+<meta property="og:updated_time" content="2016-10-10T08:31:42.248Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="回流与重绘">
+<meta name="twitter:description" content="在讨论页面重绘、回流之前。需要对页面的呈现流程有些了解，页面是怎么把html结合css等显示到浏览器上的，下面的流程图显示了浏览器对页面的呈现的处理流程。可能不同的浏览器略微会有些不同。但基本上都是类似的。
+
+浏览器把获取到的HTML代码解析成1个DOM树，HTML中的每个tag都是DOM树中的1个节点，根节点就是我们常用的document对象。DOM树里包含了所有HTML标签，包括display">
+  
+    <link rel="alternative" href="/atom.xml" title="泥匠" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//favicon.png">
+  
+  <script src="/style.js"></script>
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="null" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zekun ruan</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">一笔一划。</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔">随笔</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">zekun ruan</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="null" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zekun ruan</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">一笔一划。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-回流与重绘" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      回流与重绘
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在讨论页面重绘、回流之前。需要对页面的呈现流程有些了解，页面是怎么把html结合css等显示到浏览器上的，下面的流程图显示了浏览器对页面的呈现的处理流程。可能不同的浏览器略微会有些不同。但基本上都是类似的。</p>
+<ol>
+<li><p>浏览器把获取到的HTML代码解析成1个DOM树，HTML中的每个tag都是DOM树中的1个节点，根节点就是我们常用的document对象。DOM树里包含了所有HTML标签，包括display:none隐藏，还有用JS动态添加的元素等。</p>
+</li>
+<li><p>浏览器把所有样式(用户定义的CSS和用户代理)解析成样式结构体，在解析的过程中会去掉浏览器不能识别的样式，比如IE会去掉-moz开头的样式，而FF会去掉_开头的样式。</p>
+</li>
+</ol>
+<p>3.DOM Tree 和样式结构体组合后构建render tree, render tree类似于DOM tree，但区别很大，render tree能识别样式，render tree中每个NODE都有自己的style，而且 render tree不包含隐藏的节点 (比如display:none的节点，还有head节点)，因为这些节点不会用于呈现，而且不会影响呈现的，所以就不会包含到 render tree中。注意 visibility:hidden隐藏的元素还是会包含到 render tree中的，因为visibility:hidden 会影响布局(layout)，会占有空间。根据CSS2的标准，render tree中的每个节点都称为Box (Box dimensions)，理解页面元素为一个具有填充、边距、边框和位置的盒子。</p>
+<ol>
+<li>一旦render tree构建完毕后，浏览器就可以根据render tree来绘制页面了。</li>
+</ol>
+<h3 id="回流与重绘"><a href="#回流与重绘" class="headerlink" title="回流与重绘"></a>回流与重绘</h3><ol>
+<li><p>当render tree中的一部分(或全部)因为元素的规模尺寸，布局，隐藏等改变而需要重新构建。这就称为回流(reflow)。每个页面至少需要一次回流，就是在页面第一次加载的时候。在回流的时候，浏览器会使渲染树中受到影响的部分失效，并重新构造这部分渲染树，完成回流后，浏览器会重新绘制受影响的部分到屏幕中，该过程成为重绘。</p>
+</li>
+<li><p>当render tree中的一些元素需要更新属性，而这些属性只是影响元素的外观，风格，而不会影响布局的，比如background-color。则就叫称为重绘。</p>
+</li>
+</ol>
+<p>注意：回流必将引起重绘，而重绘不一定会引起回流。</p>
+<h3 id="回流何时发生："><a href="#回流何时发生：" class="headerlink" title="回流何时发生："></a>回流何时发生：</h3><p>当页面布局和几何属性改变时就需要回流。下述情况会发生浏览器回流：</p>
+<p>1、添加或者删除可见的DOM元素；</p>
+<p>2、元素位置改变；</p>
+<p>3、元素尺寸改变——边距、填充、边框、宽度和高度</p>
+<p>4、内容改变——比如文本改变或者图片大小改变而引起的计算值宽度和高度改变；</p>
+<p>5、页面渲染初始化；</p>
+<p>6、浏览器窗口尺寸改变——resize事件发生时；</p>
+<p>让我们看看下面的代码是如何影响回流和重绘的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">var s = document.body.style;</div><div class="line">s.padding = &quot;2px&quot;; // 回流+重绘</div><div class="line">s.border = &quot;1px solid red&quot;; // 再一次 回流+重绘</div><div class="line">s.color = &quot;blue&quot;; // 再一次重绘</div><div class="line">s.backgroundColor = &quot;#ccc&quot;; // 再一次 重绘</div><div class="line">s.fontSize = &quot;14px&quot;; // 再一次 回流+重绘</div><div class="line">// 添加node，再一次 回流+重绘</div><div class="line">document.body.appendChild(document.createTextNode(&apos;abc!&apos;));</div></pre></td></tr></table></figure></p>
+<p>说到这里大家都知道回流比重绘的代价要更高，回流的花销跟render tree有多少节点需要重新构建有关系，假设你直接操作body，比如在body最前面插入1个元素，会导致整个render tree回流，这样代价当然会比较高，但如果是指body后面插入1个元素，则不会影响前面元素的回流。</p>
+<h3 id="聪明的浏览器"><a href="#聪明的浏览器" class="headerlink" title="聪明的浏览器"></a>聪明的浏览器</h3><p>从上个实例代码中可以看到几行简单的JS代码就引起了6次左右的回流、重绘。而且我们也知道回流的花销也不小，如果每句JS操作都去回流重绘的话，浏览器可能就会受不了。所以很多浏览器都会优化这些操作，浏览器会维护1个队列，把所有会引起回流、重绘的操作放入这个队列，等队列中的操作到了一定的数量或者到了一定的时间间隔，浏览器就会flush队列，进行一个批处理。这样就会让多次的回流、重绘变成一次回流重绘。</p>
+<p>虽然有了浏览器的优化，但有时候我们写的一些代码可能会强制浏览器提前flush队列，这样浏览器的优化可能就起不到作用了。当你请求向浏览器请求一些 style信息的时候，就会让浏览器flush队列，比如：</p>
+<ol>
+<li><p>offsetTop, offsetLeft, offsetWidth, offsetHeight</p>
+</li>
+<li><p>scrollTop/Left/Width/Height</p>
+</li>
+<li><p>clientTop/Left/Width/Height</p>
+</li>
+<li><p>width,height</p>
+</li>
+<li><p>请求了getComputedStyle(), 或者 IE的 currentStyle</p>
+</li>
+</ol>
+<p>当你请求上面的一些属性的时候，浏览器为了给你最精确的值，需要flush队列，因为队列中可能会有影响到这些值的操作。即使你获取元素的布局和样式信息跟最近发生或改变的布局信息无关，浏览器都会强行刷新渲染队列。</p>
+<p>如何减少回流、重绘</p>
+<p>减少回流、重绘其实就是需要减少对render tree的操作（合并多次多DOM和样式的修改），并减少对一些style信息的请求，尽量利用好浏览器的优化策略。具体方法有：</p>
+<h4 id="1-直接改变className，如果动态改变样式，则使用cssText（考虑没有优化的浏览器）"><a href="#1-直接改变className，如果动态改变样式，则使用cssText（考虑没有优化的浏览器）" class="headerlink" title="1. 直接改变className，如果动态改变样式，则使用cssText（考虑没有优化的浏览器）"></a>1. 直接改变className，如果动态改变样式，则使用cssText（考虑没有优化的浏览器）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 不好的写法</div><div class="line">var left = 1;</div><div class="line">var top = 1;</div><div class="line">el.style.left = left + &quot;px&quot;;</div><div class="line">el.style.top = top + &quot;px&quot;;// 比较好的写法</div><div class="line">el.className += &quot; className1&quot;;</div><div class="line"> </div><div class="line">// 比较好的写法</div><div class="line">el.style.cssText += &quot;; </div><div class="line">left: &quot; + left + &quot;px; </div><div class="line">top: &quot; + top + &quot;px;&quot;;</div></pre></td></tr></table></figure>
+<h4 id="2-让要操作的元素进行”离线处理”，处理完后一起更新"><a href="#2-让要操作的元素进行”离线处理”，处理完后一起更新" class="headerlink" title="2. 让要操作的元素进行”离线处理”，处理完后一起更新"></a>2. 让要操作的元素进行”离线处理”，处理完后一起更新</h4><p>a) 使用DocumentFragment进行缓存操作,引发一次回流和重绘；<br>b) 使用display:none技术，只引发两次回流和重绘；<br>c) 使用cloneNode(true or false) 和 replaceChild 技术，引发一次回流和重绘；</p>
+<h4 id="3-不要经常访问会引起浏览器flush队列的属性，如果你确实要访问，利用缓存"><a href="#3-不要经常访问会引起浏览器flush队列的属性，如果你确实要访问，利用缓存" class="headerlink" title="3.不要经常访问会引起浏览器flush队列的属性，如果你确实要访问，利用缓存"></a>3.不要经常访问会引起浏览器flush队列的属性，如果你确实要访问，利用缓存</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">// 别这样写，大哥</div><div class="line">for(循环) &#123;</div><div class="line">el.style.left = el.offsetLeft + 5 + &quot;px&quot;;</div><div class="line">el.style.top = el.offsetTop + 5 + &quot;px&quot;;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">// 这样写好点</div><div class="line">var left = el.offsetLeft,</div><div class="line">top = el.offsetTop,</div><div class="line">s = el.style; </div><div class="line">for (循环) &#123; </div><div class="line">left += 10; </div><div class="line">top += 10; </div><div class="line">s.left = left + &quot;px&quot;; </div><div class="line">s.top = top + &quot;px&quot;; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="4-让元素脱离动画流，减少回流的Render-Tree的规模"><a href="#4-让元素脱离动画流，减少回流的Render-Tree的规模" class="headerlink" title="4. 让元素脱离动画流，减少回流的Render Tree的规模"></a>4. 让元素脱离动画流，减少回流的Render Tree的规模</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$(&quot;#block1&quot;).animate(&#123;left:50&#125;);</div><div class="line">$(&quot;#block2&quot;).animate(&#123;marginLeft:50&#125;);</div></pre></td></tr></table></figure>
+<h3 id="实例测试"><a href="#实例测试" class="headerlink" title="实例测试"></a>实例测试</h3><p>最后用2个工具对上面的理论进行一些测试，分别是：dynaTrace(测试ie),Speed Tracer(测试Chrome)。</p>
+<p>第一个测试代码不改变元素的规则，大小，位置。只改变颜色，所以不存在回流，仅测试重绘，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&lt;body&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">        var s = document.body.style;</div><div class="line">        var computed;</div><div class="line">        if (document.body.currentStyle) &#123;</div><div class="line">          computed = document.body.currentStyle;</div><div class="line">        &#125; else &#123;</div><div class="line">          computed = document.defaultView.getComputedStyle(document.body, &apos;&apos;);</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">    function testOneByOne()&#123;</div><div class="line">      s.color = &apos;red&apos;;;</div><div class="line">      tmp = computed.backgroundColor;</div><div class="line">      s.color = &apos;white&apos;;</div><div class="line">      tmp = computed.backgroundImage;</div><div class="line">      s.color = &apos;green&apos;;</div><div class="line">      tmp = computed.backgroundAttachment;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    function testAll() &#123;</div><div class="line">      s.color = &apos;yellow&apos;;</div><div class="line">      s.color = &apos;pink&apos;;</div><div class="line">      s.color = &apos;blue&apos;;</div><div class="line">      </div><div class="line">      tmp = computed.backgroundColor;</div><div class="line">      tmp = computed.backgroundImage;</div><div class="line">      tmp = computed.backgroundAttachment;</div><div class="line">    &#125;</div><div class="line">    &lt;/script&gt;    </div><div class="line">    color test &lt;br /&gt;</div><div class="line">    &lt;button onclick=&quot;testOneByOne()&quot;&gt;Test One by One&lt;/button&gt;</div><div class="line">    &lt;button onclick=&quot;testAll()&quot;&gt;Test All&lt;/button&gt;</div><div class="line">&lt;/body&gt;</div></pre></td></tr></table></figure></p>
+<p>testOneByOne 函数改变3次color,其中每次改变后调用getComputedStyle,读取属性值(按我们上面的讨论，这里会引起队列的 flush)，testAll<br>其实很多时候，前端的性能瓶颈并不在于JS的执行，而是在于页面的呈现，这种情况在富客户端中更为突出)。我们再看图的下面部分，这是第一次rendering的详细信息，可以看到里面有2行是 Scheduleing layout task，这个就是我们前面讨论过的浏览器优化过的队列，可以看出我们引发2次的flush。</p>
+<p>再看第二次rendering的详细信息，可以看出并没有Scheduleing layout task,所以这次rendering的时间也比较短。</p>
+<p>测试代码2：这个测试跟第一次测试的代码很类似，但加上了对layout的改变，为的是测试回流。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1</div><div class="line">/DTD/xhtml1-transitional.dtd&quot;&gt;</div><div class="line">&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</div><div class="line">&lt;head&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">        var s = document.body.style;</div><div class="line">        var computed;</div><div class="line">        if (document.body.currentStyle) &#123;</div><div class="line">          computed = document.body.currentStyle;</div><div class="line">        &#125; else &#123;</div><div class="line">          computed = document.defaultView.getComputedStyle(document.body, &apos;&apos;);</div><div class="line">        &#125;</div><div class="line">    function testOneByOne()&#123;</div><div class="line">      s.color = &apos;red&apos;;</div><div class="line">      s.padding = &apos;1px&apos;;</div><div class="line">      tmp = computed.backgroundColor;</div><div class="line">      s.color = &apos;white&apos;;</div><div class="line">      s.padding = &apos;2px&apos;;</div><div class="line">      tmp = computed.backgroundImage;</div><div class="line">      s.color = &apos;green&apos;;</div><div class="line">      s.padding = &apos;3px&apos;;</div><div class="line">      tmp = computed.backgroundAttachment;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    function testAll() &#123;</div><div class="line">      s.color = &apos;yellow&apos;;</div><div class="line">      s.padding = &apos;4px&apos;;</div><div class="line">      s.color = &apos;pink&apos;;</div><div class="line">      s.padding = &apos;5px&apos;;</div><div class="line">      s.color = &apos;blue&apos;;</div><div class="line">      s.padding = &apos;6px&apos;;</div><div class="line">      </div><div class="line">      tmp = computed.backgroundColor;</div><div class="line">      tmp = computed.backgroundImage;</div><div class="line">      tmp = computed.backgroundAttachment;</div><div class="line">    &#125;</div><div class="line">    &lt;/script&gt;    </div><div class="line">    color test &lt;br /&gt;</div><div class="line">    &lt;button onclick=&quot;testOneByOne()&quot;&gt;Test One by One&lt;/button&gt;</div><div class="line">    &lt;button onclick=&quot;testAll()&quot;&gt;Test All&lt;/button&gt;</div><div class="line">&lt;/body&gt;        </div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/10/10/回流与重绘/" class="archive-article-date">
+  	<time datetime="2016-10-10T03:44:18.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-10</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能-javascript/">性能　javascript</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/10/06/javascript-异步-回调-事件循环/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">javascript 异步,回调,事件循环</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 zekun ruan
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/nodejs-回调异步/" style="font-size: 10px;">nodejs 回调异步</a> <a href="/tags/性能-javascript/" style="font-size: 10px;">性能　javascript</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接1</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接2</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接3</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接4</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接5</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接6</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

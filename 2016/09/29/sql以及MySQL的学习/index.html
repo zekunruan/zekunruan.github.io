@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>sql以及MySQL的学习 | 泥匠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="MySQL 常用语法总结一、SQL结构查询语言(SQL)是用于查询关系数据库的标准语言，它包括若干关键字和一致的语法，便于数据库元件(如表、索引、字段等)的建立和操纵。以下是一些重要的SQL快速参考，有关SQL的语法和在标准SQL上增加的特性，请查询MySQL手册。
+1．创建表表是数据库的最基本元素之一，表与表之间可以相互独立，也可以相互关联。创建表的基本语法如下：create table tab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql以及MySQL的学习">
+<meta property="og:url" content="http://zekunruan.github.io/2016/09/29/sql以及MySQL的学习/index.html">
+<meta property="og:site_name" content="泥匠">
+<meta property="og:description" content="MySQL 常用语法总结一、SQL结构查询语言(SQL)是用于查询关系数据库的标准语言，它包括若干关键字和一致的语法，便于数据库元件(如表、索引、字段等)的建立和操纵。以下是一些重要的SQL快速参考，有关SQL的语法和在标准SQL上增加的特性，请查询MySQL手册。
+1．创建表表是数据库的最基本元素之一，表与表之间可以相互独立，也可以相互关联。创建表的基本语法如下：create table tab">
+<meta property="og:updated_time" content="2016-10-10T08:40:15.312Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sql以及MySQL的学习">
+<meta name="twitter:description" content="MySQL 常用语法总结一、SQL结构查询语言(SQL)是用于查询关系数据库的标准语言，它包括若干关键字和一致的语法，便于数据库元件(如表、索引、字段等)的建立和操纵。以下是一些重要的SQL快速参考，有关SQL的语法和在标准SQL上增加的特性，请查询MySQL手册。
+1．创建表表是数据库的最基本元素之一，表与表之间可以相互独立，也可以相互关联。创建表的基本语法如下：create table tab">
+  
+    <link rel="alternative" href="/atom.xml" title="泥匠" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//favicon.png">
+  
+  <script src="/style.js"></script>
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="null" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zekun ruan</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">一笔一划。</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔">随笔</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">zekun ruan</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="null" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zekun ruan</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">一笔一划。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-sql以及MySQL的学习" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      sql以及MySQL的学习
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="MySQL-常用语法总结"><a href="#MySQL-常用语法总结" class="headerlink" title="MySQL 常用语法总结"></a>MySQL 常用语法总结</h2><h3 id="一、SQL"><a href="#一、SQL" class="headerlink" title="一、SQL"></a>一、SQL</h3><p>结构查询语言(SQL)是用于查询关系数据库的标准语言，它包括若干关键字和一致的语法，便于数据库元件(如表、索引、字段等)的建立和操纵。<br>以下是一些重要的SQL快速参考，有关SQL的语法和在标准SQL上增加的特性，请查询MySQL手册。</p>
+<h4 id="1．创建表"><a href="#1．创建表" class="headerlink" title="1．创建表"></a>1．创建表</h4><p>表是数据库的最基本元素之一，表与表之间可以相互独立，也可以相互关联。创建表的基本语法如下：<br>create table table_name<br>(column_name data无效 {identity |null|not null}，…)<br>其中参数table_name和column_name必须满足用户数据库中的识别器(identifier)的要求，参数data无效是一个标准的SQL类型或由用户数据库提供的类型。用户要使用non-null从句为各字段输入数据。<br>create table还有一些其他选项，如创建临时表和使用select子句从其他的表中读取某些字段组成新表等。还有，在创建表是可用PRIMARY KEY、KEY、INDEX等标识符设定某些字段为主键或索引等。<br>书写上要注意：<br>+在一对圆括号里的列出完整的字段清单。<br>+字段名间用逗号隔开。<br>+字段名间的逗号后要加一个空格。<br>+最后一个字段名后不用逗号。<br>+所有的SQL陈述都以分号”;”结束。<br>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; CREATE TABLE test (blob_col BLOB， index(blob_col(10)));</div></pre></td></tr></table></figure></p>
+<p>####　2．创建索引<br>索引用于对数据库的查询。一般数据库建有多种索引方案，每种方案都精于某一特定的查询类。索引可以加速对数据库的查询过程。创建索引的基本语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">create index index_name</div><div class="line">on table_name (col_name[(length)]，... )</div></pre></td></tr></table></figure></p>
+<p>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; CREATE INDEX part_of_name ON customer (name(10));</div></pre></td></tr></table></figure></p>
+<h4 id="3．改变表结构"><a href="#3．改变表结构" class="headerlink" title="3．改变表结构"></a>3．改变表结构</h4><p>在数据库的使用过程中，有时需要改变它的表结构，包括改变字段名，甚至改变不同数据库字段间的关系。可以实现上述改变的命令是alter，其基本语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table table_name alter_spec [， alter_spec ...]</div></pre></td></tr></table></figure></p>
+<p>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; ALTER TABLE t1 CHANGE a b INTEGER;</div></pre></td></tr></table></figure></p>
+<p>例如：添加主键<br>（1） 如果表中没有主键，直接添加主键<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tabletop800 add primary key(id);     // 添加主键</div></pre></td></tr></table></figure></p>
+<p>（2） 如果表中有主键了，则需要删除主键后，再添加主键<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alter table tabletop800 drop primary key;         // 先删除主键 </div><div class="line">alter table tabletop800 add primary key(id, country, dtime, price);       // 再添加主键</div></pre></td></tr></table></figure></p>
+<h4 id="4．删除数据对象"><a href="#4．删除数据对象" class="headerlink" title="4．删除数据对象"></a>4．删除数据对象</h4><p>很多数据库是动态使用的，有时可能需要删除某个表或索引。大多数数据库对象可以下面的命令删除：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">drop object_name</div><div class="line">mysql&gt; DROP TABLE tb1;</div></pre></td></tr></table></figure></p>
+<h4 id="5．执行查询"><a href="#5．执行查询" class="headerlink" title="5．执行查询"></a>5．执行查询</h4><p>查询是使用最多的SQL命令。查询数据库需要凭借结构、索引和字段类型等因素。大多数数据库含有一个优化器(optimizer)，把用户的查询语句转换成可选的形式，以提高查询效率。<br>值得注意的是MySQL不支持SQL92标准的嵌套的where子句，即它只支持一个where子句。其基本语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">SELECT [STRAIGHT_JOIN] [SQL_SMALL_RESULT] [SQL_BIG_RESULT] [HIGH_PRIORITY]</div><div class="line">[DISTINCT | DISTINCTROW | ALL]</div><div class="line">select_expression，...</div><div class="line">[INTO &#123;OUTFILE | DUMPFILE&#125; ’file_name’ export_options]</div><div class="line">[FROM table_references</div><div class="line">][WHERE where_definition]</div><div class="line">[GROUP BY col_name，...]</div><div class="line">[HAVING where_definition]</div><div class="line">[ORDER BY &#123;unsigned_integer | col_name | formula&#125; ][ASC | DESC] ，...]</div><div class="line">[LIMIT ][offset，] rows]</div><div class="line">[PROCEDURE procedure_name] ]</div></pre></td></tr></table></figure></p>
+<p>其中where从句是定义选择标准的地方，where_definition可以有不同的格式，但都遵循下面的形式：<br>字段名操作表达式<br>字段名操作字段名<br>在第一种形式下，标准把字段的值与表达式进行比较；在第二种形式下，把两个字段的值进行比较。根据所比较的数据类型，search_condition中的操作可能选以下几种：</p>
+<ul>
+<li>= 检查是否相等</li>
+<li>！= 检查是否不等</li>
+<li><blockquote>
+<p>(或&gt;=) 检查左边值是否大于(或大于等于)右边值</p>
+</blockquote>
+</li>
+<li>&lt; (或&lt;=) 检查左边值是否小于(或小于等于)右边值</li>
+<li>[not] between 检查左边值是否在某个范围内</li>
+<li>[not] in 检查左边是否某个特定集的成员</li>
+<li>[not] like 检查左边是否为右边的子串</li>
+<li>is [not] null 检查左边是否为空值<br>在这里，可以用通配符_代表任何一个字符，％代表任何字符串。使用关键字<and>、<or>和<not>可以生成复杂的词，它们运行检查时使用布尔表达式的多重标准集。<br>例：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select t1.name， t2.salary from employee AS t1， info AS t2 where t1.name = t2.name;</div><div class="line">mysql&gt; select college， region， seed from tournament</div><div class="line">ORDER BY region， seed;</div><div class="line">mysql&gt; select col_name from tbl_name WHERE col_name &gt; 0;</div></pre></td></tr></table></figure>
+</not></or></and></li>
+</ul>
+<h4 id="6．修改表中数据"><a href="#6．修改表中数据" class="headerlink" title="6．修改表中数据"></a>6．修改表中数据</h4><p>在使用数据库过程中，往往要修改其表中的数据，比如往表中添加新数据，删除表中原有数据，或对表中原有数据进行更改。它们的基本语法如下：<br>数据添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">insert [into] table_name [(column(s))]</div><div class="line">values (expression(s))</div></pre></td></tr></table></figure></p>
+<p>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; INSERT INTO tbl_name (col1，col2) VALUES(15，col1*2);</div></pre></td></tr></table></figure></p>
+<p>数据删除：<br>删除 from table_name where search_condition<br>数据更改：<br>更新 table_name<br>set column1=expression1，<br>column2=expression2，…<br>where search_condition</p>
+<h4 id="7．数据库切换"><a href="#7．数据库切换" class="headerlink" title="7．数据库切换"></a>7．数据库切换</h4><p>当存在多个数据库时，可以用下面的命令定义用户想使用的数据库：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">use database_name</div></pre></td></tr></table></figure></p>
+<h4 id="8．统计函数"><a href="#8．统计函数" class="headerlink" title="8．统计函数"></a>8．统计函数</h4><p>SQL有一些统计函数，它们对于生成数据表格很有帮助。下面介绍几个常用的统计函数：</p>
+<ul>
+<li>sum (exepression) 计算表达式的和</li>
+<li>avg (exepression) 计算表达式的平均值</li>
+<li>count (exepression) 对表达式进行简单的计数</li>
+<li>count (*) 统计记录数</li>
+<li>max (exepression) 求最大值</li>
+<li>min (exepression) 求最小值<br>其中exepression为任何有效的SQL表达式，它可以是一个或多个记录，也可以是别的SQL函数的组合。</li>
+</ul>
+<h3 id="二、MySQL使用导引"><a href="#二、MySQL使用导引" class="headerlink" title="二、MySQL使用导引"></a>二、MySQL使用导引</h3><h4 id="1．运用MySQL建立新数据库"><a href="#1．运用MySQL建立新数据库" class="headerlink" title="1．运用MySQL建立新数据库"></a>1．运用MySQL建立新数据库</h4><p>在shell下运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">＄&gt;mysqladmin create database01</div><div class="line">Database &quot;database01&quot; created.</div><div class="line">#### 2．启动MySQL</div></pre></td></tr></table></figure></p>
+<p>在shell下运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">＄&gt;mysql</div><div class="line">Welcome to the MySQL monitor. Commands end with ; or g.</div><div class="line">Your MySQL connection id is 22 to server version: 3.21. 29a-gamma-debug</div><div class="line">无效 ’help’ for help.</div></pre></td></tr></table></figure></p>
+<h4 id="3．更换数据库"><a href="#3．更换数据库" class="headerlink" title="3．更换数据库"></a>3．更换数据库</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt;use database01</div><div class="line">database changed.</div></pre></td></tr></table></figure>
+<h4 id="4．创建表"><a href="#4．创建表" class="headerlink" title="4．创建表"></a>4．创建表</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt;create table table01 (field01 integer， field02 char(10));</div><div class="line">Query OK， 0 rows affected (0.00 sec)</div></pre></td></tr></table></figure>
+<h4 id="5．列出表清单"><a href="#5．列出表清单" class="headerlink" title="5．列出表清单"></a>5．列出表清单</h4><p>mysql&gt;show tables;<br>Tables in database01<br>Table01<br>table02</p>
+<h4 id="6．列出表中的字段清单"><a href="#6．列出表中的字段清单" class="headerlink" title="6．列出表中的字段清单"></a>6．列出表中的字段清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysql&gt;show columns from table01;</div><div class="line">Field 无效 Null Key Default Extra</div><div class="line">field01 int(11) YES</div><div class="line">field02 char(10) YES</div></pre></td></tr></table></figure>
+<h4 id="7．表的数据填写"><a href="#7．表的数据填写" class="headerlink" title="7．表的数据填写"></a>7．表的数据填写</h4><p>插入数据<br>mysql&gt;insert into table01 (field01， field02) values (1， ’first’);<br>Query OK， 1 row affected (0.00 sec)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">#### 8．字段的增加</div><div class="line">...一次一个字段</div><div class="line">mysql&gt;alter table table01 add column field03 char(20);</div><div class="line">Query OK， l row affected (0.04 sec)</div><div class="line">Records: 1 Duplicates: 0 Warnings: 0</div><div class="line">...一次多个字段</div><div class="line">mysql&gt;alter table table01 add column field04 date， add column field05 time;</div><div class="line">Query OK， l row affected (0.04 sec)</div><div class="line">Records: 1 Duplicates: 0 Warnings: 0</div><div class="line">注意：每一列都必须以&quot;add column&quot;重新开始。</div><div class="line">它运行了吗？让我们看看。</div><div class="line">mysql&gt;select * from table01;</div><div class="line">field01 field02 field03 field04 field05</div><div class="line">1 first NULL NULL NULL</div><div class="line">#### 9．多行命令输入</div><div class="line">MySQL命令行界面允许把陈述作为一行输入，也可以把它展开为多行输入。这两者之间并没有语法上的区别。使用多行输入，你可以将SQL陈述一步步分解，从而使你更容易理解。</div><div class="line">在多行方式下，注释器把每一行都添加到前面的行后，直到你用分号&quot;;&quot;来结束这个SQL陈述。一旦键入分号并按回车键，这个陈述即被执行。</div><div class="line">下面的例子是同一个严格的SQL陈述的两种输入方法：</div><div class="line">单行输入</div><div class="line">Mysql&gt;create table table33 (field01 integer， field02 char(30));</div><div class="line">多行输入</div></pre></td></tr></table></figure></p>
+<p>Mysql&gt;create table table33<br>-&gt;(field01<br>-&gt;integer，<br>-&gt;field02<br>-&gt;char(30));<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">注意不能将单词断开，如：</div><div class="line">正确</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;create table table33<br>-&gt;( field01<br>-&gt;integer，<br>-&gt;field02<br>-&gt;char(30));<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">错误</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;create table table33<br>-&gt;( field01 inte<br>-&gt;ger，<br>-&gt;field02<br>-&gt;char(30));<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">当插入或更改数据时，不能将字段的字符串展开到多行里，否则硬回车将被储存到数据中：</div><div class="line">标准操作</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;insert into table33 (field02)<br>-&gt;values<br>-&gt;(’who thought of foo?’);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">硬回车储存到数据中</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;insert into table33 (field02)<br>-&gt;values<br>-&gt;(’who thought<br>-&gt;of foo?’);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">结果如下：</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;select * from table33;<br>field01 field02<br>NULL who thought of foo?<br>NULL who thought<br>Of foo?<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#### 10．表的数据嵌入</div><div class="line">`</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;insert into table01 (field01， field02， field03， field04， field05) values<br>-&gt;(2， ’second’， ’another’， ’1999-10-23’， ’10:30:00’);<br>Query OK， 1 row affected (0.00 sec)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">`</div></pre></td></tr></table></figure></p>
+<p>标准日期格式是”yyyy-mm-dd”。<br>标准时间格式是”hh:mm:ss”。<br>引号内要求所给的是上述的标准日期和时间格式。<br>日期也可以”yyyymmdd”形式，时间也可以”hhmmss”形式输入，但其值不需要再加引号。<br>数字值不需要加引号。这种保存与数据类型无关，这些数据类型都有格式化的专栏来包含(例如：文本，日期，时间，整数等)。<br>MySQL有一个很有用的命令缓冲区。它保存着你目前已经键入的SQL语句利用它，对于相同的命令，你就不必一遍又一遍地重复输入。下一步我们就来看这样的一个例子。<br>利用命令缓冲区(及任意的日期和时间格式)增加另一个数据<br>按两次键盘上的向上箭头键。<br>回车。<br>在圆括号内输入新的值，并以分号结尾。<br>(3， ’a third’， ’more’， 19991024， 103004);<br>回车。<br>新值存在里面了吗？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">mysql&gt;select * from table01;</div><div class="line">field01 field02 field03 field04 field05</div><div class="line">1 first NULL NULL NULL</div><div class="line">2 second another 1999-10-23 10:30:00</div><div class="line">3 a third more 1999-10-24 10:30:04</div></pre></td></tr></table></figure></p>
+<h4 id="11．表的数据更新"><a href="#11．表的数据更新" class="headerlink" title="11．表的数据更新"></a>11．表的数据更新</h4><p>一次修改一个字段<br>再次注意语法。文本需要加引号但数字不要。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt;更新 table01 set field03=’new info’ where field01=1;</div><div class="line">Query OK， 1 row affected (0.00 sec)</div></pre></td></tr></table></figure></p>
+<p>一次改变多个字段<br>记住在每一个更新的字段间用逗号隔开。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt;更新 table01 set field04=19991022， field05=062218 where field01=1;</div><div class="line">Query OK， 1 row affected (0.00 sec)</div><div class="line">一次更新多个数据</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;更新 table01 set field05=152901 where field04&gt;19990101;<br>Query OK， 3 rows affected (0.00 sec)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#### 12．删除数据</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;删除 from table01 where field01=3;<br>Query OK， 1 row affected (0.00 sec)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#### 13．退出</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;quit<br>Bye<br>```<br>现在你已经了解了一些运行MySQL中的数据库的根本命令。由于MySQL是通过执行SQL调用来操作的，在你的处理过程中需要一个强有力工具的充足的数组。例如，通过联接相关的字段，你可以同时显示几个表中的数据。同样，SQL允许综合显示、更新或者删除多个符合具体标准的数据。如果你还想精通掌握它，下一步就要学习所有SQL的知识。</p>
+<p>–1、查找员工的编号、姓名、部门和出生日期，如果出生日期为空值，显示日期不详,并按部门排序输出,日期格式为yyyy-mm-dd。<br>select emp_no,emp_name,dept,isnull(convert(char(10),birthday,120),’日期不详’) birthday<br>from employee<br>order by dept</p>
+<p>–2、查找与喻自强在同一个单位的员工姓名、性别、部门和职称<br>select emp_no,emp_name,dept,title<br>from employee<br>where emp_name&lt;&gt;’喻自强’ and dept in<br>(select dept from employee<br>where emp_name=’喻自强’)</p>
+<p>–3、按部门进行汇总，统计每个部门的总工资<br>select dept,sum(salary)<br>from employee<br>group by dept</p>
+<p>–4、查找商品名称为14寸显示器商品的销售情况，显示该商品的编号、销售数量、单价和金额<br>select a.prod_id,qty,unit_price,unit_price*qty totprice<br>from sale_item a,product b<br>where a.prod_id=b.prod_id and prod_name=’14寸显示器’</p>
+<p>–5、在销售明细表中按产品编号进行汇总，统计每种产品的销售数量和金额<br>select prod_id,sum(qty) totqty,sum(qty*unit_price) totprice<br>from sale_item<br>group by prod_id</p>
+<p>–6、使用convert函数按客户编号统计每个客户1996年的订单总金额<br>select cust_id,sum(tot_amt) totprice<br>from sales<br>where convert(char(4),order_date,120)=’1996’<br>group by cust_id</p>
+<p>–7、查找有销售记录的客户编号、名称和订单总额<br>select a.cust_id,cust_name,sum(tot_amt) totprice<br>from customer a,sales b<br>where a.cust_id=b.cust_id<br>group by a.cust_id,cust_name</p>
+<p>–8、查找在1997年中有销售记录的客户编号、名称和订单总额<br>select a.cust_id,cust_name,sum(tot_amt) totprice<br>from customer a,sales b<br>where a.cust_id=b.cust_id and convert(char(4),order_date,120)=’1997’<br>group by a.cust_id,cust_name</p>
+<p>–9、查找一次销售最大的销售记录<br>select order_no,cust_id,sale_id,tot_amt<br>from sales<br>where tot_amt=<br>(select max(tot_amt)<br>from sales)</p>
+<p>–10、查找至少有3次销售的业务员名单和销售日期<br>select emp_name,order_date<br>from employee a,sales b<br>where emp_no=sale_id and a.emp_no in<br>(select sale_id<br>from sales<br>group by sale_id<br>having count(*)&gt;=3)<br>order by emp_name</p>
+<p>–11、用存在量词查找没有订货记录的客户名称<br>select cust_name<br>from customer a<br>where not exists<br>(select *<br>from sales b<br>where a.cust_id=b.cust_id)</p>
+<p>–12、使用左外连接查找每个客户的客户编号、名称、订货日期、订单金额订货日期不要显示时间，日期格式为yyyy-mm-dd按客户编号排序，同一客户再按订单降序排序输出<br>select a.cust_id,cust_name,convert(char(10),order_date,120),tot_amt<br>from customer a left outer join sales b on a.cust_id=b.cust_id<br>order by a.cust_id,tot_amt desc</p>
+<p>–13、查找16M DRAM的销售情况，要求显示相应的销售员的姓名、性别，销售日期、销售数量和金额，其中性别用男、女表示<br>select emp_name 姓名, 性别= case a.sex when ‘m’ then ‘男’<br>when ‘f’ then ‘女’<br>else ‘未’<br>end,<br>销售日期= isnull(convert(char(10),c.order_date,120),’日期不详’),<br>qty 数量, qty*unit_price as 金额<br>from employee a, sales b, sale_item c,product d<br>where d.prod_name=’16M DRAM’ and d.prod_id=c.prod_id and<br>a.emp_no=b.sale_id and b.order_no=c.order_no</p>
+<p>–14、查找每个人的销售记录，要求显示销售员的编号、姓名、性别、产品名称、数量、单价、金额和销售日期<br>select emp_no 编号,emp_name 姓名, 性别= case a.sex when ‘m’ then ‘男’<br>when ‘f’ then ‘女’<br>else ‘未’<br>end,<br>prod_name 产品名称,销售日期= isnull(convert(char(10),c.order_date,120),’日期不详’),<br>qty 数量, qty*unit_price as 金额<br>from employee a left outer join sales b on a.emp_no=b.sale_id , sale_item c,product d<br>where d.prod_id=c.prod_id and b.order_no=c.order_no</p>
+<p>–15、查找销售金额最大的客户名称和总货款<br>select cust_name,d.cust_sum<br>from customer a,<br>(select cust_id,cust_sum<br>from (select cust_id, sum(tot_amt) as cust_sum<br>from sales<br>group by cust_id ) b<br>where b.cust_sum =<br>( select max(cust_sum)<br>from (select cust_id, sum(tot_amt) as cust_sum<br>from sales<br>group by cust_id ) c )<br>) d<br>where a.cust_id=d.cust_id</p>
+<p>–16、查找销售总额少于1000元的销售员编号、姓名和销售额<br>select emp_no,emp_name,d.sale_sum<br>from employee a,<br>(select sale_id,sale_sum<br>from (select sale_id, sum(tot_amt) as sale_sum<br>from sales<br>group by sale_id ) b<br>where b.sale_sum &lt;1000<br>) d<br>where a.emp_no=d.sale_id</p>
+<p>–17、查找至少销售了3种商品的客户编号、客户名称、商品编号、商品名称、数量和金额<br>select a.cust_id,cust_name,b.prod_id,prod_name,d.qty,d.qty*d.unit_price<br>from customer a, product b, sales c, sale_item d<br>where a.cust_id=c.cust_id and d.prod_id=b.prod_id and<br>c.order_no=d.order_no and a.cust_id in (<br>select cust_id<br>from (select cust_id,count(distinct prod_id) prodid<br>from (select cust_id,prod_id<br>from sales e,sale_item f<br>where e.order_no=f.order_no) g<br>group by cust_id<br>having count(distinct prod_id)&gt;=3) h )</p>
+<p>–18、查找至少与世界技术开发公司销售相同的客户编号、名称和商品编号、商品名称、数量和金额<br>select a.cust_id,cust_name,d.prod_id,prod_name,qty,qty<em>unit_price<br>from customer a, product b, sales c, sale_item d<br>where a.cust_id=c.cust_id and d.prod_id=b.prod_id and<br>c.order_no=d.order_no and not exists<br>(select f.</em><br>from customer x ,sales e, sale_item f<br>where cust_name=’世界技术开发公司’ and x.cust_id=e.cust_id and<br>e.order_no=f.order_no and not exists<br>( select g.*<br>from sale_item g, sales h<br>where g.prod_id = f.prod_id and g.order_no=h.order_no and<br>h.cust_id=a.cust_id)<br>)</p>
+<p>19、查找表中所有姓刘的职工的工号，部门，薪水<br>select emp_no,emp_name,dept,salary<br>from employee<br>where emp_name like ‘刘%’</p>
+<p>20、查找所有定单金额高于2000的所有客户编号<br>select cust_id<br>from sales<br>where tot_amt&gt;2000</p>
+<p>21、统计表中员工的薪水在4000-6000之间的人数<br>select count(*)as 人数<br>from employee<br>where salary between 4000 and 6000</p>
+<p>22、查询表中的同一部门的职工的平均工资，但只查询＂住址＂是＂上海市＂的员工<br>select avg(salary) avg_sal,dept<br>from employee<br>where addr like ‘上海市%’<br>group by dept</p>
+<p>23、将表中住址为”上海市”的员工住址改为”北京市”<br>update employee<br>set addr like ‘北京市’<br>where addr like ‘上海市’</p>
+<p>24、查找业务部或会计部的女员工的基本信息。<br>select emp_no,emp_name,dept<br>from employee<br>where sex=’F’and dept in (‘业务’,’会计’)</p>
+<p>25、显示每种产品的销售金额总和，并依销售金额由大到小输出。<br>select prod_id ,sum(qty<em>unit_price)<br>from sale_item<br>group by prod_id<br>order by sum(qty</em>unit_price) desc</p>
+<p>26、选取编号界于’C0001’和’C0004’的客户编号、客户名称、客户地址。<br>select CUST_ID,cust_name,addr<br>from customer<br>where cust_id between ‘C0001’ AND ‘C0004’</p>
+<p>27、计算出一共销售了几种产品。<br>select count(distinct prod_id) as ‘共销售产品数’<br>from sale_item</p>
+<p>28、将业务部员工的薪水上调3%。<br>update employee<br>set salary=salary*1.03<br>where dept=’业务’</p>
+<p>29、由employee表中查找出薪水最低的员工信息。<br>select *<br>from employee<br>where salary=<br>(select min(salary )<br>from employee )</p>
+<p>30、使用join查询客户姓名为”客户丙”所购货物的”客户名称”,”定单金额”,”定货日期”,”电话号码”<br>select a.cust_id,b.tot_amt,b.order_date,a.tel_no<br>from customer a join sales b<br>on a.cust_id=b.cust_id and cust_name like ‘客户丙’</p>
+<p>31、由sales表中查找出订单金额大于”E0013业务员在1996/10/15这天所接每一张订单的金额”的所有订单。<br>select *<br>from sales<br>where tot_amt&gt;all<br>(select tot_amt<br>from sales<br>where sale_id=’E0013’and order_date=’1996/10/15’)<br>order by tot_amt</p>
+<p>32、计算’P0001’产品的平均销售单价<br>select avg(unit_price)<br>from sale_item<br>where prod_id=’P0001’</p>
+<p>33、找出公司女员工所接的定单<br>select sale_id,tot_amt<br>from sales<br>where sale_id in<br>(select sale_id from employee<br>where sex=’F’)</p>
+<p>34、找出同一天进入公司服务的员工<br>select a.emp_no,a.emp_name,a.date_hired<br>from employee a<br>join employee b<br>on (a.emp_no!=b.emp_no and a.date_hired=b.date_hired)<br>order by a.date_hired</p>
+<p>35、找出目前业绩超过232000元的员工编号和姓名。<br>select emp_no,emp_name<br>from employee<br>where emp_no in<br>(select sale_id<br>from sales<br>group by sale_id<br>having sum(tot_amt)&lt;232000)</p>
+<p>36、查询出employee表中所有女职工的平均工资和住址在＂上海市＂的所有女职工的平均工资<br>select avg(salary)<br>from employee<br>where sex like ‘f’<br>union<br>select avg(salary)<br>from employee<br>where sex like ‘f’ and addr like ‘上海市%’</p>
+<p>37、在employee表中查询薪水超过员工平均薪水的员工信息。<br>Select *<br>from employee<br>where salary&gt;( select avg(salary)<br>from employee)</p>
+<p>38、找出目前销售业绩超过10000元的业务员编号及销售业绩，并按销售业绩从大到小排序。<br>Select sale_id ,sum(tot_amt)<br>from sales<br>group by sale_id<br>having sum(tot_amt)&gt;10000<br>order by sum(tot_amt) desc</p>
+<p>39、找出公司男业务员所接且订单金额超过2000元的订单号及订单金额。<br>Select order_no,tot_amt<br>From sales ,employee<br>Where sale_id=emp_no and sex=’M’ and tot_amt&gt;2000</p>
+<p>40、 查询sales表中订单金额最高的订单号及订单金额。<br>Select order_no,tot_amt from sales<br>where tot_amt=(select max(tot_amt) from sales)</p>
+<p>41、 查询在每张订单中订购金额超过4000元的客户名及其地址。<br>Select cust_name,addr from customer a,sales b<br>where a.cust_id=b.cust_id and tot_amt&gt;4000</p>
+<p>42、求出每位客户的总订购金额，显示出客户号及总订购金额，并按总订购金额降序排列。<br>Select cust_id,sum(tot_amt) from sales<br>Group by cust_id<br>Order by sum(tot_amt) desc</p>
+<p>43、求每位客户订购的每种产品的总数量及平均单价，并按客户号，产品号从小到大排列。<br>Select cust_id,prod_id,sum(qty),sum(qty*unit_price)/sum(qty)<br>From sales a, sale_item b<br>Where a.order_no=b.order_no<br>Group by cust_id,prod_id<br>Order by cust_id,prod_id</p>
+<p>44、 查询订购了三种以上产品的订单号。<br>Select order_no<br>from sale_item<br>Group by order_no<br>Having count(*)&gt;3</p>
+<p>45、 查询订购的产品至少包含了订单3号中所订购产品的订单。<br>Select distinct order_no<br>From sale_item a<br>Where order_no&lt;&gt;’3’and not exists (<br>Select <em> from sale_item b where order_no =’3’ and not exists<br>(select </em> from sale_item c where c.order_no=a.order_no and c.prod_id=b.prod_id))</p>
+<p>46、在sales表中查找出订单金额大于”E0013业务员在1996/11/10这天所接每一张订单的金额”的所有订单，并显示承接这些订单的业务员和该订单的金额。<br>Select sale_id,tot_amt from sales<br>where tot_amt&gt;all(select tot_amt<br>from sales<br>where sale_id=’E0013’ and order_date=’1996-11-10’)</p>
+<p>47、 查询末承接业务的员工的信息。<br>Select <em><br>From employee a<br>Where not exists<br>(select </em> from sales b where a.emp_no=b.sale_id)</p>
+<p>48、 查询来自上海市的客户的姓名，电话、订单号及订单金额。<br>Select cust_name,tel_no,order_no,tot_amt<br>From customer a ,sales b<br>Where a.cust_id=b.cust_id and addr=’上海市’</p>
+<p>49、查询每位业务员各个月的业绩，并按业务员编号、月份降序排序。<br>Select sale_id,month(order_date), sum(tot_amt)<br>from sales<br>group by sale_id,month(order_date)<br>order by sale_id,month(order_date) desc</p>
+<p>50、求每种产品的总销售数量及总销售金额，要求显示出产品编号、产品名称，总数量及总金额，并按产品号从小到大排列。<br>Select a.prod_id,prod_name,sum(qty),sum(qty*unit_price)<br>From sale_item a,product b<br>Where a.prod_id=b.prod_id<br>Group by a.prod_id,prod_name<br>Order by a.prod_id<br>51、查询总订购金额超过’C0002’客户的总订购金额的客户号，客户名及其住址。<br>Select cust_id, cust_name,addr<br>From customer<br>Where cust_id in (select cust_id from sales<br>Group by cust_id<br>Having sum(tot_amt)&gt;<br>(Select sum(tot_amt) from sales where cust_id=’C0002’))</p>
+<p>52、 查询业绩最好的的业务员号、业务员名及其总销售金额。<br>select emp_no,emp_name,sum(tot_amt)<br>from employee a,sales b<br>where a.emp_no=b.sale_id<br>group by emp_no,emp_name<br>having sum(tot_amt)=<br>(select max(totamt)<br>from (select sale_id,sum(tot_amt) totamt<br>from sales<br>group by sale_id) c)</p>
+<p>53、查询每位客户所订购的每种产品的详细清单，要求显示出客户号，客户名，产品号，产品名，数量及单价。<br>select a.cust_id, cust_name,c.prod_id,prod_name,qty, unit_price<br>from customer a,sales b, sale_item c ,product d<br>where a.cust_id=b.cust_id and b.order_no=c.order_no and c.prod_id=d.prod_id</p>
+<p>54、 求各部门的平均薪水，要求按平均薪水从小到大排序。<br>select dept,avg(salary)<br>from employee<br>group by dept<br>order by avg(salary)</p>
+<p>数据库常用命令</p>
+<p>查看表的结构：<br>desc tabletop800;   或     describe tabletop800;</p>
+<p>查看表的创建结构：<br>show create table tabletop800;</p>
+<p>修改表的字段类型<br>alter table tabletop800 change rating rating char(10);</p>
+<p>修改表的字段为 NOT NULL + Default<br>alter table tabletop800 change price price char(20) not null default ‘Free’;       // not null + default</p>
+<p>修改表的主键：<br> alter table tableop800 drop primary key;         // 先删除主键<br> alter table tabletop800 add primary key(id, country, dtime, price);       // 再添加主键</p>
+<p>更新表的字段值：<br>update tabletop800 set price=’Free’ where price=’’;    // 字段price为空的，全部设置为值“Free”</p>
+<hr>
+<p>导出数据库<br>mysqldump -u root top800 &gt; sql_database_bk/top800_database_bk_2011-10-22.sql</p>
+<p>导出数据库的表<br>mysqldump -u root top800 tabletop800 &gt; sql_database_bk/top800_tabletop800_table_bk_2011-10-22.sql </p>
+<hr>
+<p>导入数据库：<br>登录MySQL:      mysql -u root -p’123456’<br>创建数据库：    create database top800;<br>导入数据库：    mysql -u root -p’123456’ top800 &lt; top800_database_bk_2011-11-11.sql</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/09/29/sql以及MySQL的学习/" class="archive-article-date">
+  	<time datetime="2016-09-29T08:55:17.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-09-29</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mysql/">Mysql</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/10/06/javascript-异步-回调-事件循环/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          javascript 异步,回调,事件循环
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/27/angularJs的几个易错点/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">angularJs的几个易错点</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 zekun ruan
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/nodejs-回调异步/" style="font-size: 10px;">nodejs 回调异步</a> <a href="/tags/性能-javascript/" style="font-size: 10px;">性能　javascript</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接1</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接2</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接3</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接4</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接5</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接6</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>

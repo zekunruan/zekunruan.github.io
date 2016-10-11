@@ -144,6 +144,486 @@
       <div class="body-wrap">
         
   
+    <article id="post-回流与重绘" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/10/回流与重绘/">回流与重绘</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在讨论页面重绘、回流之前。需要对页面的呈现流程有些了解，页面是怎么把html结合css等显示到浏览器上的，下面的流程图显示了浏览器对页面的呈现的处理流程。可能不同的浏览器略微会有些不同。但基本上都是类似的。</p>
+<ol>
+<li><p>浏览器把获取到的HTML代码解析成1个DOM树，HTML中的每个tag都是DOM树中的1个节点，根节点就是我们常用的document对象。DOM树里包含了所有HTML标签，包括display:none隐藏，还有用JS动态添加的元素等。</p>
+</li>
+<li><p>浏览器把所有样式(用户定义的CSS和用户代理)解析成样式结构体，在解析的过程中会去掉浏览器不能识别的样式，比如IE会去掉-moz开头的样式，而FF会去掉_开头的样式。</p>
+</li>
+</ol>
+<p>3.DOM Tree 和样式结构体组合后构建render tree, render tree类似于DOM tree，但区别很大，render tree能识别样式，render tree中每个NODE都有自己的style，而且 render tree不包含隐藏的节点 (比如display:none的节点，还有head节点)，因为这些节点不会用于呈现，而且不会影响呈现的，所以就不会包含到 render tree中。注意 visibility:hidden隐藏的元素还是会包含到 render tree中的，因为visibility:hidden 会影响布局(layout)，会占有空间。根据CSS2的标准，render tree中的每个节点都称为Box (Box dimensions)，理解页面元素为一个具有填充、边距、边框和位置的盒子。</p>
+<ol>
+<li>一旦render tree构建完毕后，浏览器就可以根据render tree来绘制页面了。</li>
+</ol>
+<h3 id="回流与重绘"><a href="#回流与重绘" class="headerlink" title="回流与重绘"></a>回流与重绘</h3><ol>
+<li><p>当render tree中的一部分(或全部)因为元素的规模尺寸，布局，隐藏等改变而需要重新构建。这就称为回流(reflow)。每个页面至少需要一次回流，就是在页面第一次加载的时候。在回流的时候，浏览器会使渲染树中受到影响的部分失效，并重新构造这部分渲染树，完成回流后，浏览器会重新绘制受影响的部分到屏幕中，该过程成为重绘。</p>
+</li>
+<li><p>当render tree中的一些元素需要更新属性，而这些属性只是影响元素的外观，风格，而不会影响布局的，比如background-color。则就叫称为重绘。</p>
+</li>
+</ol>
+<p>注意：回流必将引起重绘，而重绘不一定会引起回流。</p>
+<h3 id="回流何时发生："><a href="#回流何时发生：" class="headerlink" title="回流何时发生："></a>回流何时发生：</h3><p>当页面布局和几何属性改变时就需要回流。下述情况会发生浏览器回流：</p>
+<p>1、添加或者删除可见的DOM元素；</p>
+<p>2、元素位置改变；</p>
+<p>3、元素尺寸改变——边距、填充、边框、宽度和高度</p>
+<p>4、内容改变——比如文本改变或者图片大小改变而引起的计算值宽度和高度改变；</p>
+<p>5、页面渲染初始化；</p>
+<p>6、浏览器窗口尺寸改变——resize事件发生时；</p>
+<p>让我们看看下面的代码是如何影响回流和重绘的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">var s = document.body.style;</div><div class="line">s.padding = &quot;2px&quot;; // 回流+重绘</div><div class="line">s.border = &quot;1px solid red&quot;; // 再一次 回流+重绘</div><div class="line">s.color = &quot;blue&quot;; // 再一次重绘</div><div class="line">s.backgroundColor = &quot;#ccc&quot;; // 再一次 重绘</div><div class="line">s.fontSize = &quot;14px&quot;; // 再一次 回流+重绘</div><div class="line">// 添加node，再一次 回流+重绘</div><div class="line">document.body.appendChild(document.createTextNode(&apos;abc!&apos;));</div></pre></td></tr></table></figure></p>
+<p>说到这里大家都知道回流比重绘的代价要更高，回流的花销跟render tree有多少节点需要重新构建有关系，假设你直接操作body，比如在body最前面插入1个元素，会导致整个render tree回流，这样代价当然会比较高，但如果是指body后面插入1个元素，则不会影响前面元素的回流。</p>
+<h3 id="聪明的浏览器"><a href="#聪明的浏览器" class="headerlink" title="聪明的浏览器"></a>聪明的浏览器</h3><p>从上个实例代码中可以看到几行简单的JS代码就引起了6次左右的回流、重绘。而且我们也知道回流的花销也不小，如果每句JS操作都去回流重绘的话，浏览器可能就会受不了。所以很多浏览器都会优化这些操作，浏览器会维护1个队列，把所有会引起回流、重绘的操作放入这个队列，等队列中的操作到了一定的数量或者到了一定的时间间隔，浏览器就会flush队列，进行一个批处理。这样就会让多次的回流、重绘变成一次回流重绘。</p>
+<p>虽然有了浏览器的优化，但有时候我们写的一些代码可能会强制浏览器提前flush队列，这样浏览器的优化可能就起不到作用了。当你请求向浏览器请求一些 style信息的时候，就会让浏览器flush队列，比如：</p>
+<ol>
+<li><p>offsetTop, offsetLeft, offsetWidth, offsetHeight</p>
+</li>
+<li><p>scrollTop/Left/Width/Height</p>
+</li>
+<li><p>clientTop/Left/Width/Height</p>
+</li>
+<li><p>width,height</p>
+</li>
+<li><p>请求了getComputedStyle(), 或者 IE的 currentStyle</p>
+</li>
+</ol>
+<p>当你请求上面的一些属性的时候，浏览器为了给你最精确的值，需要flush队列，因为队列中可能会有影响到这些值的操作。即使你获取元素的布局和样式信息跟最近发生或改变的布局信息无关，浏览器都会强行刷新渲染队列。</p>
+<p>如何减少回流、重绘</p>
+<p>减少回流、重绘其实就是需要减少对render tree的操作（合并多次多DOM和样式的修改），并减少对一些style信息的请求，尽量利用好浏览器的优化策略。具体方法有：</p>
+<h4 id="1-直接改变className，如果动态改变样式，则使用cssText（考虑没有优化的浏览器）"><a href="#1-直接改变className，如果动态改变样式，则使用cssText（考虑没有优化的浏览器）" class="headerlink" title="1. 直接改变className，如果动态改变样式，则使用cssText（考虑没有优化的浏览器）"></a>1. 直接改变className，如果动态改变样式，则使用cssText（考虑没有优化的浏览器）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 不好的写法</div><div class="line">var left = 1;</div><div class="line">var top = 1;</div><div class="line">el.style.left = left + &quot;px&quot;;</div><div class="line">el.style.top = top + &quot;px&quot;;// 比较好的写法</div><div class="line">el.className += &quot; className1&quot;;</div><div class="line"> </div><div class="line">// 比较好的写法</div><div class="line">el.style.cssText += &quot;; </div><div class="line">left: &quot; + left + &quot;px; </div><div class="line">top: &quot; + top + &quot;px;&quot;;</div></pre></td></tr></table></figure>
+<h4 id="2-让要操作的元素进行”离线处理”，处理完后一起更新"><a href="#2-让要操作的元素进行”离线处理”，处理完后一起更新" class="headerlink" title="2. 让要操作的元素进行”离线处理”，处理完后一起更新"></a>2. 让要操作的元素进行”离线处理”，处理完后一起更新</h4><p>a) 使用DocumentFragment进行缓存操作,引发一次回流和重绘；<br>b) 使用display:none技术，只引发两次回流和重绘；<br>c) 使用cloneNode(true or false) 和 replaceChild 技术，引发一次回流和重绘；</p>
+<h4 id="3-不要经常访问会引起浏览器flush队列的属性，如果你确实要访问，利用缓存"><a href="#3-不要经常访问会引起浏览器flush队列的属性，如果你确实要访问，利用缓存" class="headerlink" title="3.不要经常访问会引起浏览器flush队列的属性，如果你确实要访问，利用缓存"></a>3.不要经常访问会引起浏览器flush队列的属性，如果你确实要访问，利用缓存</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">// 别这样写，大哥</div><div class="line">for(循环) &#123;</div><div class="line">el.style.left = el.offsetLeft + 5 + &quot;px&quot;;</div><div class="line">el.style.top = el.offsetTop + 5 + &quot;px&quot;;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">// 这样写好点</div><div class="line">var left = el.offsetLeft,</div><div class="line">top = el.offsetTop,</div><div class="line">s = el.style; </div><div class="line">for (循环) &#123; </div><div class="line">left += 10; </div><div class="line">top += 10; </div><div class="line">s.left = left + &quot;px&quot;; </div><div class="line">s.top = top + &quot;px&quot;; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="4-让元素脱离动画流，减少回流的Render-Tree的规模"><a href="#4-让元素脱离动画流，减少回流的Render-Tree的规模" class="headerlink" title="4. 让元素脱离动画流，减少回流的Render Tree的规模"></a>4. 让元素脱离动画流，减少回流的Render Tree的规模</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$(&quot;#block1&quot;).animate(&#123;left:50&#125;);</div><div class="line">$(&quot;#block2&quot;).animate(&#123;marginLeft:50&#125;);</div></pre></td></tr></table></figure>
+<h3 id="实例测试"><a href="#实例测试" class="headerlink" title="实例测试"></a>实例测试</h3><p>最后用2个工具对上面的理论进行一些测试，分别是：dynaTrace(测试ie),Speed Tracer(测试Chrome)。</p>
+<p>第一个测试代码不改变元素的规则，大小，位置。只改变颜色，所以不存在回流，仅测试重绘，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&lt;body&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">        var s = document.body.style;</div><div class="line">        var computed;</div><div class="line">        if (document.body.currentStyle) &#123;</div><div class="line">          computed = document.body.currentStyle;</div><div class="line">        &#125; else &#123;</div><div class="line">          computed = document.defaultView.getComputedStyle(document.body, &apos;&apos;);</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">    function testOneByOne()&#123;</div><div class="line">      s.color = &apos;red&apos;;;</div><div class="line">      tmp = computed.backgroundColor;</div><div class="line">      s.color = &apos;white&apos;;</div><div class="line">      tmp = computed.backgroundImage;</div><div class="line">      s.color = &apos;green&apos;;</div><div class="line">      tmp = computed.backgroundAttachment;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    function testAll() &#123;</div><div class="line">      s.color = &apos;yellow&apos;;</div><div class="line">      s.color = &apos;pink&apos;;</div><div class="line">      s.color = &apos;blue&apos;;</div><div class="line">      </div><div class="line">      tmp = computed.backgroundColor;</div><div class="line">      tmp = computed.backgroundImage;</div><div class="line">      tmp = computed.backgroundAttachment;</div><div class="line">    &#125;</div><div class="line">    &lt;/script&gt;    </div><div class="line">    color test &lt;br /&gt;</div><div class="line">    &lt;button onclick=&quot;testOneByOne()&quot;&gt;Test One by One&lt;/button&gt;</div><div class="line">    &lt;button onclick=&quot;testAll()&quot;&gt;Test All&lt;/button&gt;</div><div class="line">&lt;/body&gt;</div></pre></td></tr></table></figure></p>
+<p>testOneByOne 函数改变3次color,其中每次改变后调用getComputedStyle,读取属性值(按我们上面的讨论，这里会引起队列的 flush)，testAll<br>其实很多时候，前端的性能瓶颈并不在于JS的执行，而是在于页面的呈现，这种情况在富客户端中更为突出)。我们再看图的下面部分，这是第一次rendering的详细信息，可以看到里面有2行是 Scheduleing layout task，这个就是我们前面讨论过的浏览器优化过的队列，可以看出我们引发2次的flush。</p>
+<p>再看第二次rendering的详细信息，可以看出并没有Scheduleing layout task,所以这次rendering的时间也比较短。</p>
+<p>测试代码2：这个测试跟第一次测试的代码很类似，但加上了对layout的改变，为的是测试回流。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1</div><div class="line">/DTD/xhtml1-transitional.dtd&quot;&gt;</div><div class="line">&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</div><div class="line">&lt;head&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">        var s = document.body.style;</div><div class="line">        var computed;</div><div class="line">        if (document.body.currentStyle) &#123;</div><div class="line">          computed = document.body.currentStyle;</div><div class="line">        &#125; else &#123;</div><div class="line">          computed = document.defaultView.getComputedStyle(document.body, &apos;&apos;);</div><div class="line">        &#125;</div><div class="line">    function testOneByOne()&#123;</div><div class="line">      s.color = &apos;red&apos;;</div><div class="line">      s.padding = &apos;1px&apos;;</div><div class="line">      tmp = computed.backgroundColor;</div><div class="line">      s.color = &apos;white&apos;;</div><div class="line">      s.padding = &apos;2px&apos;;</div><div class="line">      tmp = computed.backgroundImage;</div><div class="line">      s.color = &apos;green&apos;;</div><div class="line">      s.padding = &apos;3px&apos;;</div><div class="line">      tmp = computed.backgroundAttachment;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    function testAll() &#123;</div><div class="line">      s.color = &apos;yellow&apos;;</div><div class="line">      s.padding = &apos;4px&apos;;</div><div class="line">      s.color = &apos;pink&apos;;</div><div class="line">      s.padding = &apos;5px&apos;;</div><div class="line">      s.color = &apos;blue&apos;;</div><div class="line">      s.padding = &apos;6px&apos;;</div><div class="line">      </div><div class="line">      tmp = computed.backgroundColor;</div><div class="line">      tmp = computed.backgroundImage;</div><div class="line">      tmp = computed.backgroundAttachment;</div><div class="line">    &#125;</div><div class="line">    &lt;/script&gt;    </div><div class="line">    color test &lt;br /&gt;</div><div class="line">    &lt;button onclick=&quot;testOneByOne()&quot;&gt;Test One by One&lt;/button&gt;</div><div class="line">    &lt;button onclick=&quot;testAll()&quot;&gt;Test All&lt;/button&gt;</div><div class="line">&lt;/body&gt;        </div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/10/10/回流与重绘/" class="archive-article-date">
+  	<time datetime="2016-10-10T03:44:18.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-10</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能-javascript/">性能　javascript</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-javascript-异步-回调-事件循环" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/06/javascript-异步-回调-事件循环/">javascript 异步,回调,事件循环</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="详解回调函数——以JS为例解读异步、回调和EventLoop"><a href="#详解回调函数——以JS为例解读异步、回调和EventLoop" class="headerlink" title="详解回调函数——以JS为例解读异步、回调和EventLoop"></a>详解回调函数——以JS为例解读异步、回调和EventLoop</h4><p>回调，是非常基本的概念，尤其在现今NodeJS诞生与蓬勃发展中变得更加被人们重视。本质上说不理解回调，就不理解NodeJS。</p>
+<p>NodeJS有三大核心： </p>
+<ul>
+<li>CallBack回调 </li>
+<li>Event事件 </li>
+<li>Stream流</li>
+</ul>
+<p>先来看什么不叫回调，下面是很多人误认为的回调：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//代码示例1</div><div class="line">//Foo函数意在接收两个参数，任意类型a，和函数类型cb，在结尾要调用cb()</div><div class="line">function Foo(a, cb)&#123;</div><div class="line">    console.log(a);</div><div class="line">    // do something else</div><div class="line">    // Maybe get some parameters for cb</div><div class="line">    var param = Math.random();</div><div class="line">    cb(param);</div><div class="line">&#125;</div><div class="line">//定义一个叫CallBack的函数，将作为参数传给Foo</div><div class="line">var CallBack = function(num)&#123;</div><div class="line">    console.log(num);</div><div class="line">&#125;</div><div class="line">//调用Foo</div><div class="line">Foo(2, CallBack);</div></pre></td></tr></table></figure>
+<p>以上代码不是回调，以下指出这里哪些概念容易混淆： </p>
+<ul>
+<li>变量CallBack，被赋值为一个匿名函数，但是不因为它名字叫CallBack，就称知为回调 </li>
+<li>Foo函数的第二个形式参数名为cb，同理叫cb，和是不是回调没关系 </li>
+<li>cb在Foo函数代码最后被以cb(param)的形式调用，不因为cb在另一个函数中被调用，而将其称之为回调</li>
+</ul>
+<p>直白来讲，以上代码就是普通的函数调用，唯一特殊一点的地方是，因为JS有函数式语言的特性，可以接收函数作为参数。在C语言里可以用指向函数的指针来达到类似效果。</p>
+<p>讲到这里先停一下，大家注意到本文的标题是解读异步、回调和EventLoop，回调之前还有异步呢，这个顺序对于理解很有帮助，可以说理解回调的前提，是理解异步。</p>
+<p>说到异步，什么是异步呢？和分布、并行有什么区别？</p>
+<p>回归原始，追根溯源是我们学习编程的好方法，不去想有什么高级的工具和概念，而去想如果我们只有一个浏览器做编译器和一个记事本，用plain JS写一段异步代码，怎么写？不能用事件系统，不能用浏览器特性。</p>
+<p>小明：刚才上面那段代码是异步的吗？<br>老袁：当然不是，即便把Foo改为AsyncFoo也不是。这里比较迷惑的是cb(param)是在Foo函数的最后被调用的。<br>小明：好像觉得异步的代码，确实应该在最后调一个callback函数，因为之后的代码不会被执行到了。<br>老袁：异步的一个定义是函数调用不返回原来代码调用处，而cb(params)调用完后，依旧返回到Foo的尾部，即便cb(params)后还有代码，它们也可以被执行到，这是个同步调用。</p>
+<p>Plain JS 异步的写法有很多，以经典的为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">//代码示例2</div><div class="line">// ====同步的加法</div><div class="line">function Add(a, b)&#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div><div class="line">Add(1, 2) // =&gt; 3</div><div class="line"></div><div class="line">// ====异步的加法</div><div class="line">function LazyAdd(a)&#123;</div><div class="line">    return function(b)&#123;</div><div class="line">        return a+b;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">var result = LazyAdd(1); // result等于一个匿名函数，实际是闭包</div></pre></td></tr></table></figure>
+<p>上述代码展示了，最简单的异步。我们要强调的事，异步是异步，回调是回调，他俩半毛钱关系都没有。</p>
+<p>Ok，下面把代码改一改，看什么叫回调：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//代码示例3</div><div class="line">//注意还是那个Add，精髓也在这里，随后说到</div><div class="line">function Add(a, b)&#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div><div class="line">//LazyAdd改变了，多了一个参数cb</div><div class="line">function LazyAdd(a, cb)&#123;</div><div class="line">    return function(b)&#123;</div><div class="line">        cb(a, b);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">//将Add传给形参cb</div><div class="line">var result = LazyAdd(1, Add)</div><div class="line">// doing something else</div><div class="line">result = result(2); // =&gt; 3</div></pre></td></tr></table></figure></p>
+<p>这段代码，看似简单，实则并不平凡。</p>
+<p>小明：这代码给人的第一感觉就是脱裤子放屁，明明一个a+b，先是变成异步的写法就多了很多代码，人都看不懂了，现在的这个加了所谓的“回调”，更啰嗦了，最后得到的结果都是1+2=3，尼玛这不有病吗？<br>老袁：你只看到了结果，却不知道为什么人家这么写，这样写为了什么。代码示例2和3中，同样的Add函数，作为参数传到LazyAdd中，此时它是回调。那为什么代码示例1中，Foo中传入的cb不是回调呢？要仔细体会这句话，需要带状态的才叫回调函数，own state，这里通过闭包保存的a就是状态。<br>小明：我伙呆<br>老袁：现在再说为什么要有回调，单看输出结果，回调除了啰嗦和难于理解之外没有任何意义。但是！！！</p>
+<p>现在说吧，CallBack的好处是：保证API不撕裂<br>也就是说，异步是很有需求的，处理的好能使计算效率提高，不至于卡在某处一直等待。但是异步的写法，我们看到了非常难看，把一个加法变成异步，都如此难看，何况其他。那么CallBack的妙处就是“保证API不撕裂”，代码中写到的精髓所在，还是那个Add，对，让程序员在写异步程序的时候，还能够像同步写法那样好理解，Add作为CallBack传入，保证的是Add这个方法好理解，作为API设计中的重要一个环节，保证开发者用起来方便，代码可读性高。</p>
+<p>以NodeJS的readFile API为例进一步说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fs.readFile(filename, [options], callback)</div></pre></td></tr></table></figure></p>
+<p>有两个必填的参数filename和callback<br>callback是实际程序员要写代码的地方，写它的时候假设文件已经读取到了，该怎么写还怎么写，是API历史上的一次大进步。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//读取文件&apos;etc/passwd&apos;,读取完成后将返回值，传入function(err, data) 这个回调函数。</div><div class="line">fs.readFile(&apos;/etc/passwd&apos;, function (err, data) &#123;</div><div class="line">  if (err) throw err;</div><div class="line">  console.log(data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h4 id="回调和闭包有一个共同的特性：在最终“回调-”调用以前，前面所有的状态都得存着。"><a href="#回调和闭包有一个共同的特性：在最终“回调-”调用以前，前面所有的状态都得存着。" class="headerlink" title="回调和闭包有一个共同的特性：在最终“回调 ”调用以前，前面所有的状态都得存着。"></a>回调和闭包有一个共同的特性：在最终“回调 ”调用以前，前面所有的状态都得存着。</h4><p>这段代码对于人们的疑惑常常是，我怎么知道callback要接收几个参数，参数的类型是什么？<br>答：是API提供者事先设计好的，它需要在文档中说明callback接收什么参数。</p>
+<p>如代码3展示的那样，API设计者通过种种技巧，实现了回调的形式，这种种技巧写起来很痛苦。而fs.readFile看起来写的很轻巧，这是因为它不光包含异步、回调，还引入的新的概念EventLoop。</p>
+<p>EventLoop是很早前就有的概念，如MFC中的消息循环，浏览器中的事件机制等等。</p>
+<p>那为什么要有EventLoop，它的目的是什么呢？</p>
+<p>我们用一个简单的伪示例，看没有EventLoop时是怎么工作：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">//代码示例4</div><div class="line">function Add(a, b)&#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function LazyAdd(a, cb)&#123;</div><div class="line">    return function(b)&#123;</div><div class="line">        cb(a, b);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var result = LazyAdd(1, Add)</div><div class="line">// 假设有一个变量button为false，我们继续调用result的条件是，当button为true的时候。</div><div class="line">var button = false;</div><div class="line"></div><div class="line">// 常用的办法是观察者模式，派一个人不断的看button的值，</div><div class="line">//只要变了就开始执行result(2), 当然得有别人去改变button的值，</div><div class="line">//这里假设有人有这个能力,比如起了另外一个线程去做。</div><div class="line">while(true)&#123;</div><div class="line">    if(button)&#123;</div><div class="line">        result = result(2);</div><div class="line">        break;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">result = result(2); // =&gt; 3</div></pre></td></tr></table></figure></p>
+<p>所以如果有很多这样的函数，每一个都要跑一个观察者模式，在一定条件下看上去比较费计算。这时EventLoop诞生了，派一个人来轮询所有的，其他人都可以把观察条件和回调函数注册在EventLoop上，它进行统一的轮询，注册的人越多，轮询一圈的时间越长。但是简化了编程，不用每个人都写轮询了，提供API变得方便，就像fs.readFile一样简单明白，fs.readFile读取文件’/etc/passwd’，将其注册到EventLoop上，当文件读取完毕的时候，EventLoop通过轮询感知到它，并调用readFile注册时带的回调函数，这里是funtion(err, data)</p>
+<p>换一个说法再说一遍：在特定条件下，单台机器上用空间换计算。原本callback执行了就不等了，存在一个地方，其他依赖它的，用观察着模式一直盯着它，各自轮询各自的。现在有人出来替大家统一轮询。<br>再换一个说法说一遍，重要的事情，换着方法说3遍：在单台机器上，统一轮询看上去比较省，也带来了很多问题，比如NodeJS中单线程情况下，如果一个函数计算量非常复杂，会阻碍所有其他的事件，所以这种情况要将复杂计算交给其他线程或者是服务来做。<br>我们一直在强调单台机器，如果是多台，用一个统一的人来轮询，就比较恐怖了，大家把事件都注册到一台机器上，它负责轮询所有的，这个namenode就容易崩溃。所以在多台机器上，又适合，每天机器各自轮询各自的，带来的问题是状态不一致了。好的，这才是程序有意思的地方，我们需要知道为什么发明EventLoop，也需要知道EventLoop在什么地方遇到问题。那些天才的程序员，又提出了各种一致性算法来解决这个问题，本文暂不讨论。</p>
+<p>到目前为止，我们梳理了他们之间的关系：<br>异步 –&gt; 回调 –&gt; EventLoop<br>每一次进步都是上一个台阶，都需要智慧来解决。</p>
+<p>回调还产生了很多问题，最严重的问题是callback hell回调地狱。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">fs.readFile(&apos;/etc/password&apos;, function(err, data)&#123;</div><div class="line">    // do something</div><div class="line">    fs.readFile(&apos;xxxx&apos;, function(err, data)&#123;</div><div class="line">        //do something</div><div class="line">            fs.readFile(&apos;xxxxx&apos;, function(err, data)&#123;</div><div class="line">            // do something</div><div class="line">        &#125;)</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>这个例子可能不恰当，但也能理解，在类似这种情况会出现一层套一层的代码，可读性、维护性差。</p>
+<p>在ES6 里面给出了Generator，来解决异步编程的问题。`</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/10/06/javascript-异步-回调-事件循环/" class="archive-article-date">
+  	<time datetime="2016-10-05T17:39:41.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-06</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs-回调异步/">nodejs 回调异步</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-sql以及MySQL的学习" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/29/sql以及MySQL的学习/">sql以及MySQL的学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="MySQL-常用语法总结"><a href="#MySQL-常用语法总结" class="headerlink" title="MySQL 常用语法总结"></a>MySQL 常用语法总结</h2><h3 id="一、SQL"><a href="#一、SQL" class="headerlink" title="一、SQL"></a>一、SQL</h3><p>结构查询语言(SQL)是用于查询关系数据库的标准语言，它包括若干关键字和一致的语法，便于数据库元件(如表、索引、字段等)的建立和操纵。<br>以下是一些重要的SQL快速参考，有关SQL的语法和在标准SQL上增加的特性，请查询MySQL手册。</p>
+<h4 id="1．创建表"><a href="#1．创建表" class="headerlink" title="1．创建表"></a>1．创建表</h4><p>表是数据库的最基本元素之一，表与表之间可以相互独立，也可以相互关联。创建表的基本语法如下：<br>create table table_name<br>(column_name data无效 {identity |null|not null}，…)<br>其中参数table_name和column_name必须满足用户数据库中的识别器(identifier)的要求，参数data无效是一个标准的SQL类型或由用户数据库提供的类型。用户要使用non-null从句为各字段输入数据。<br>create table还有一些其他选项，如创建临时表和使用select子句从其他的表中读取某些字段组成新表等。还有，在创建表是可用PRIMARY KEY、KEY、INDEX等标识符设定某些字段为主键或索引等。<br>书写上要注意：<br>+在一对圆括号里的列出完整的字段清单。<br>+字段名间用逗号隔开。<br>+字段名间的逗号后要加一个空格。<br>+最后一个字段名后不用逗号。<br>+所有的SQL陈述都以分号”;”结束。<br>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; CREATE TABLE test (blob_col BLOB， index(blob_col(10)));</div></pre></td></tr></table></figure></p>
+<p>####　2．创建索引<br>索引用于对数据库的查询。一般数据库建有多种索引方案，每种方案都精于某一特定的查询类。索引可以加速对数据库的查询过程。创建索引的基本语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">create index index_name</div><div class="line">on table_name (col_name[(length)]，... )</div></pre></td></tr></table></figure></p>
+<p>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; CREATE INDEX part_of_name ON customer (name(10));</div></pre></td></tr></table></figure></p>
+<h4 id="3．改变表结构"><a href="#3．改变表结构" class="headerlink" title="3．改变表结构"></a>3．改变表结构</h4><p>在数据库的使用过程中，有时需要改变它的表结构，包括改变字段名，甚至改变不同数据库字段间的关系。可以实现上述改变的命令是alter，其基本语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table table_name alter_spec [， alter_spec ...]</div></pre></td></tr></table></figure></p>
+<p>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; ALTER TABLE t1 CHANGE a b INTEGER;</div></pre></td></tr></table></figure></p>
+<p>例如：添加主键<br>（1） 如果表中没有主键，直接添加主键<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tabletop800 add primary key(id);     // 添加主键</div></pre></td></tr></table></figure></p>
+<p>（2） 如果表中有主键了，则需要删除主键后，再添加主键<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alter table tabletop800 drop primary key;         // 先删除主键 </div><div class="line">alter table tabletop800 add primary key(id, country, dtime, price);       // 再添加主键</div></pre></td></tr></table></figure></p>
+<h4 id="4．删除数据对象"><a href="#4．删除数据对象" class="headerlink" title="4．删除数据对象"></a>4．删除数据对象</h4><p>很多数据库是动态使用的，有时可能需要删除某个表或索引。大多数数据库对象可以下面的命令删除：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">drop object_name</div><div class="line">mysql&gt; DROP TABLE tb1;</div></pre></td></tr></table></figure></p>
+<h4 id="5．执行查询"><a href="#5．执行查询" class="headerlink" title="5．执行查询"></a>5．执行查询</h4><p>查询是使用最多的SQL命令。查询数据库需要凭借结构、索引和字段类型等因素。大多数数据库含有一个优化器(optimizer)，把用户的查询语句转换成可选的形式，以提高查询效率。<br>值得注意的是MySQL不支持SQL92标准的嵌套的where子句，即它只支持一个where子句。其基本语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">SELECT [STRAIGHT_JOIN] [SQL_SMALL_RESULT] [SQL_BIG_RESULT] [HIGH_PRIORITY]</div><div class="line">[DISTINCT | DISTINCTROW | ALL]</div><div class="line">select_expression，...</div><div class="line">[INTO &#123;OUTFILE | DUMPFILE&#125; ’file_name’ export_options]</div><div class="line">[FROM table_references</div><div class="line">][WHERE where_definition]</div><div class="line">[GROUP BY col_name，...]</div><div class="line">[HAVING where_definition]</div><div class="line">[ORDER BY &#123;unsigned_integer | col_name | formula&#125; ][ASC | DESC] ，...]</div><div class="line">[LIMIT ][offset，] rows]</div><div class="line">[PROCEDURE procedure_name] ]</div></pre></td></tr></table></figure></p>
+<p>其中where从句是定义选择标准的地方，where_definition可以有不同的格式，但都遵循下面的形式：<br>字段名操作表达式<br>字段名操作字段名<br>在第一种形式下，标准把字段的值与表达式进行比较；在第二种形式下，把两个字段的值进行比较。根据所比较的数据类型，search_condition中的操作可能选以下几种：</p>
+<ul>
+<li>= 检查是否相等</li>
+<li>！= 检查是否不等</li>
+<li><blockquote>
+<p>(或&gt;=) 检查左边值是否大于(或大于等于)右边值</p>
+</blockquote>
+</li>
+<li>&lt; (或&lt;=) 检查左边值是否小于(或小于等于)右边值</li>
+<li>[not] between 检查左边值是否在某个范围内</li>
+<li>[not] in 检查左边是否某个特定集的成员</li>
+<li>[not] like 检查左边是否为右边的子串</li>
+<li>is [not] null 检查左边是否为空值<br>在这里，可以用通配符_代表任何一个字符，％代表任何字符串。使用关键字<and>、<or>和<not>可以生成复杂的词，它们运行检查时使用布尔表达式的多重标准集。<br>例：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select t1.name， t2.salary from employee AS t1， info AS t2 where t1.name = t2.name;</div><div class="line">mysql&gt; select college， region， seed from tournament</div><div class="line">ORDER BY region， seed;</div><div class="line">mysql&gt; select col_name from tbl_name WHERE col_name &gt; 0;</div></pre></td></tr></table></figure>
+</not></or></and></li>
+</ul>
+<h4 id="6．修改表中数据"><a href="#6．修改表中数据" class="headerlink" title="6．修改表中数据"></a>6．修改表中数据</h4><p>在使用数据库过程中，往往要修改其表中的数据，比如往表中添加新数据，删除表中原有数据，或对表中原有数据进行更改。它们的基本语法如下：<br>数据添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">insert [into] table_name [(column(s))]</div><div class="line">values (expression(s))</div></pre></td></tr></table></figure></p>
+<p>例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; INSERT INTO tbl_name (col1，col2) VALUES(15，col1*2);</div></pre></td></tr></table></figure></p>
+<p>数据删除：<br>删除 from table_name where search_condition<br>数据更改：<br>更新 table_name<br>set column1=expression1，<br>column2=expression2，…<br>where search_condition</p>
+<h4 id="7．数据库切换"><a href="#7．数据库切换" class="headerlink" title="7．数据库切换"></a>7．数据库切换</h4><p>当存在多个数据库时，可以用下面的命令定义用户想使用的数据库：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">use database_name</div></pre></td></tr></table></figure></p>
+<h4 id="8．统计函数"><a href="#8．统计函数" class="headerlink" title="8．统计函数"></a>8．统计函数</h4><p>SQL有一些统计函数，它们对于生成数据表格很有帮助。下面介绍几个常用的统计函数：</p>
+<ul>
+<li>sum (exepression) 计算表达式的和</li>
+<li>avg (exepression) 计算表达式的平均值</li>
+<li>count (exepression) 对表达式进行简单的计数</li>
+<li>count (*) 统计记录数</li>
+<li>max (exepression) 求最大值</li>
+<li>min (exepression) 求最小值<br>其中exepression为任何有效的SQL表达式，它可以是一个或多个记录，也可以是别的SQL函数的组合。</li>
+</ul>
+<h3 id="二、MySQL使用导引"><a href="#二、MySQL使用导引" class="headerlink" title="二、MySQL使用导引"></a>二、MySQL使用导引</h3><h4 id="1．运用MySQL建立新数据库"><a href="#1．运用MySQL建立新数据库" class="headerlink" title="1．运用MySQL建立新数据库"></a>1．运用MySQL建立新数据库</h4><p>在shell下运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">＄&gt;mysqladmin create database01</div><div class="line">Database &quot;database01&quot; created.</div><div class="line">#### 2．启动MySQL</div></pre></td></tr></table></figure></p>
+<p>在shell下运行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">＄&gt;mysql</div><div class="line">Welcome to the MySQL monitor. Commands end with ; or g.</div><div class="line">Your MySQL connection id is 22 to server version: 3.21. 29a-gamma-debug</div><div class="line">无效 ’help’ for help.</div></pre></td></tr></table></figure></p>
+<h4 id="3．更换数据库"><a href="#3．更换数据库" class="headerlink" title="3．更换数据库"></a>3．更换数据库</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt;use database01</div><div class="line">database changed.</div></pre></td></tr></table></figure>
+<h4 id="4．创建表"><a href="#4．创建表" class="headerlink" title="4．创建表"></a>4．创建表</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt;create table table01 (field01 integer， field02 char(10));</div><div class="line">Query OK， 0 rows affected (0.00 sec)</div></pre></td></tr></table></figure>
+<h4 id="5．列出表清单"><a href="#5．列出表清单" class="headerlink" title="5．列出表清单"></a>5．列出表清单</h4><p>mysql&gt;show tables;<br>Tables in database01<br>Table01<br>table02</p>
+<h4 id="6．列出表中的字段清单"><a href="#6．列出表中的字段清单" class="headerlink" title="6．列出表中的字段清单"></a>6．列出表中的字段清单</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysql&gt;show columns from table01;</div><div class="line">Field 无效 Null Key Default Extra</div><div class="line">field01 int(11) YES</div><div class="line">field02 char(10) YES</div></pre></td></tr></table></figure>
+<h4 id="7．表的数据填写"><a href="#7．表的数据填写" class="headerlink" title="7．表的数据填写"></a>7．表的数据填写</h4><p>插入数据<br>mysql&gt;insert into table01 (field01， field02) values (1， ’first’);<br>Query OK， 1 row affected (0.00 sec)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">#### 8．字段的增加</div><div class="line">...一次一个字段</div><div class="line">mysql&gt;alter table table01 add column field03 char(20);</div><div class="line">Query OK， l row affected (0.04 sec)</div><div class="line">Records: 1 Duplicates: 0 Warnings: 0</div><div class="line">...一次多个字段</div><div class="line">mysql&gt;alter table table01 add column field04 date， add column field05 time;</div><div class="line">Query OK， l row affected (0.04 sec)</div><div class="line">Records: 1 Duplicates: 0 Warnings: 0</div><div class="line">注意：每一列都必须以&quot;add column&quot;重新开始。</div><div class="line">它运行了吗？让我们看看。</div><div class="line">mysql&gt;select * from table01;</div><div class="line">field01 field02 field03 field04 field05</div><div class="line">1 first NULL NULL NULL</div><div class="line">#### 9．多行命令输入</div><div class="line">MySQL命令行界面允许把陈述作为一行输入，也可以把它展开为多行输入。这两者之间并没有语法上的区别。使用多行输入，你可以将SQL陈述一步步分解，从而使你更容易理解。</div><div class="line">在多行方式下，注释器把每一行都添加到前面的行后，直到你用分号&quot;;&quot;来结束这个SQL陈述。一旦键入分号并按回车键，这个陈述即被执行。</div><div class="line">下面的例子是同一个严格的SQL陈述的两种输入方法：</div><div class="line">单行输入</div><div class="line">Mysql&gt;create table table33 (field01 integer， field02 char(30));</div><div class="line">多行输入</div></pre></td></tr></table></figure></p>
+<p>Mysql&gt;create table table33<br>-&gt;(field01<br>-&gt;integer，<br>-&gt;field02<br>-&gt;char(30));<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">注意不能将单词断开，如：</div><div class="line">正确</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;create table table33<br>-&gt;( field01<br>-&gt;integer，<br>-&gt;field02<br>-&gt;char(30));<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">错误</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;create table table33<br>-&gt;( field01 inte<br>-&gt;ger，<br>-&gt;field02<br>-&gt;char(30));<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">当插入或更改数据时，不能将字段的字符串展开到多行里，否则硬回车将被储存到数据中：</div><div class="line">标准操作</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;insert into table33 (field02)<br>-&gt;values<br>-&gt;(’who thought of foo?’);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">硬回车储存到数据中</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;insert into table33 (field02)<br>-&gt;values<br>-&gt;(’who thought<br>-&gt;of foo?’);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">结果如下：</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;select * from table33;<br>field01 field02<br>NULL who thought of foo?<br>NULL who thought<br>Of foo?<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#### 10．表的数据嵌入</div><div class="line">`</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;insert into table01 (field01， field02， field03， field04， field05) values<br>-&gt;(2， ’second’， ’another’， ’1999-10-23’， ’10:30:00’);<br>Query OK， 1 row affected (0.00 sec)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">`</div></pre></td></tr></table></figure></p>
+<p>标准日期格式是”yyyy-mm-dd”。<br>标准时间格式是”hh:mm:ss”。<br>引号内要求所给的是上述的标准日期和时间格式。<br>日期也可以”yyyymmdd”形式，时间也可以”hhmmss”形式输入，但其值不需要再加引号。<br>数字值不需要加引号。这种保存与数据类型无关，这些数据类型都有格式化的专栏来包含(例如：文本，日期，时间，整数等)。<br>MySQL有一个很有用的命令缓冲区。它保存着你目前已经键入的SQL语句利用它，对于相同的命令，你就不必一遍又一遍地重复输入。下一步我们就来看这样的一个例子。<br>利用命令缓冲区(及任意的日期和时间格式)增加另一个数据<br>按两次键盘上的向上箭头键。<br>回车。<br>在圆括号内输入新的值，并以分号结尾。<br>(3， ’a third’， ’more’， 19991024， 103004);<br>回车。<br>新值存在里面了吗？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">mysql&gt;select * from table01;</div><div class="line">field01 field02 field03 field04 field05</div><div class="line">1 first NULL NULL NULL</div><div class="line">2 second another 1999-10-23 10:30:00</div><div class="line">3 a third more 1999-10-24 10:30:04</div></pre></td></tr></table></figure></p>
+<h4 id="11．表的数据更新"><a href="#11．表的数据更新" class="headerlink" title="11．表的数据更新"></a>11．表的数据更新</h4><p>一次修改一个字段<br>再次注意语法。文本需要加引号但数字不要。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt;更新 table01 set field03=’new info’ where field01=1;</div><div class="line">Query OK， 1 row affected (0.00 sec)</div></pre></td></tr></table></figure></p>
+<p>一次改变多个字段<br>记住在每一个更新的字段间用逗号隔开。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt;更新 table01 set field04=19991022， field05=062218 where field01=1;</div><div class="line">Query OK， 1 row affected (0.00 sec)</div><div class="line">一次更新多个数据</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;更新 table01 set field05=152901 where field04&gt;19990101;<br>Query OK， 3 rows affected (0.00 sec)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#### 12．删除数据</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;删除 from table01 where field01=3;<br>Query OK， 1 row affected (0.00 sec)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#### 13．退出</div></pre></td></tr></table></figure></p>
+<p>mysql&gt;quit<br>Bye<br>```<br>现在你已经了解了一些运行MySQL中的数据库的根本命令。由于MySQL是通过执行SQL调用来操作的，在你的处理过程中需要一个强有力工具的充足的数组。例如，通过联接相关的字段，你可以同时显示几个表中的数据。同样，SQL允许综合显示、更新或者删除多个符合具体标准的数据。如果你还想精通掌握它，下一步就要学习所有SQL的知识。</p>
+<p>–1、查找员工的编号、姓名、部门和出生日期，如果出生日期为空值，显示日期不详,并按部门排序输出,日期格式为yyyy-mm-dd。<br>select emp_no,emp_name,dept,isnull(convert(char(10),birthday,120),’日期不详’) birthday<br>from employee<br>order by dept</p>
+<p>–2、查找与喻自强在同一个单位的员工姓名、性别、部门和职称<br>select emp_no,emp_name,dept,title<br>from employee<br>where emp_name&lt;&gt;’喻自强’ and dept in<br>(select dept from employee<br>where emp_name=’喻自强’)</p>
+<p>–3、按部门进行汇总，统计每个部门的总工资<br>select dept,sum(salary)<br>from employee<br>group by dept</p>
+<p>–4、查找商品名称为14寸显示器商品的销售情况，显示该商品的编号、销售数量、单价和金额<br>select a.prod_id,qty,unit_price,unit_price*qty totprice<br>from sale_item a,product b<br>where a.prod_id=b.prod_id and prod_name=’14寸显示器’</p>
+<p>–5、在销售明细表中按产品编号进行汇总，统计每种产品的销售数量和金额<br>select prod_id,sum(qty) totqty,sum(qty*unit_price) totprice<br>from sale_item<br>group by prod_id</p>
+<p>–6、使用convert函数按客户编号统计每个客户1996年的订单总金额<br>select cust_id,sum(tot_amt) totprice<br>from sales<br>where convert(char(4),order_date,120)=’1996’<br>group by cust_id</p>
+<p>–7、查找有销售记录的客户编号、名称和订单总额<br>select a.cust_id,cust_name,sum(tot_amt) totprice<br>from customer a,sales b<br>where a.cust_id=b.cust_id<br>group by a.cust_id,cust_name</p>
+<p>–8、查找在1997年中有销售记录的客户编号、名称和订单总额<br>select a.cust_id,cust_name,sum(tot_amt) totprice<br>from customer a,sales b<br>where a.cust_id=b.cust_id and convert(char(4),order_date,120)=’1997’<br>group by a.cust_id,cust_name</p>
+<p>–9、查找一次销售最大的销售记录<br>select order_no,cust_id,sale_id,tot_amt<br>from sales<br>where tot_amt=<br>(select max(tot_amt)<br>from sales)</p>
+<p>–10、查找至少有3次销售的业务员名单和销售日期<br>select emp_name,order_date<br>from employee a,sales b<br>where emp_no=sale_id and a.emp_no in<br>(select sale_id<br>from sales<br>group by sale_id<br>having count(*)&gt;=3)<br>order by emp_name</p>
+<p>–11、用存在量词查找没有订货记录的客户名称<br>select cust_name<br>from customer a<br>where not exists<br>(select *<br>from sales b<br>where a.cust_id=b.cust_id)</p>
+<p>–12、使用左外连接查找每个客户的客户编号、名称、订货日期、订单金额订货日期不要显示时间，日期格式为yyyy-mm-dd按客户编号排序，同一客户再按订单降序排序输出<br>select a.cust_id,cust_name,convert(char(10),order_date,120),tot_amt<br>from customer a left outer join sales b on a.cust_id=b.cust_id<br>order by a.cust_id,tot_amt desc</p>
+<p>–13、查找16M DRAM的销售情况，要求显示相应的销售员的姓名、性别，销售日期、销售数量和金额，其中性别用男、女表示<br>select emp_name 姓名, 性别= case a.sex when ‘m’ then ‘男’<br>when ‘f’ then ‘女’<br>else ‘未’<br>end,<br>销售日期= isnull(convert(char(10),c.order_date,120),’日期不详’),<br>qty 数量, qty*unit_price as 金额<br>from employee a, sales b, sale_item c,product d<br>where d.prod_name=’16M DRAM’ and d.prod_id=c.prod_id and<br>a.emp_no=b.sale_id and b.order_no=c.order_no</p>
+<p>–14、查找每个人的销售记录，要求显示销售员的编号、姓名、性别、产品名称、数量、单价、金额和销售日期<br>select emp_no 编号,emp_name 姓名, 性别= case a.sex when ‘m’ then ‘男’<br>when ‘f’ then ‘女’<br>else ‘未’<br>end,<br>prod_name 产品名称,销售日期= isnull(convert(char(10),c.order_date,120),’日期不详’),<br>qty 数量, qty*unit_price as 金额<br>from employee a left outer join sales b on a.emp_no=b.sale_id , sale_item c,product d<br>where d.prod_id=c.prod_id and b.order_no=c.order_no</p>
+<p>–15、查找销售金额最大的客户名称和总货款<br>select cust_name,d.cust_sum<br>from customer a,<br>(select cust_id,cust_sum<br>from (select cust_id, sum(tot_amt) as cust_sum<br>from sales<br>group by cust_id ) b<br>where b.cust_sum =<br>( select max(cust_sum)<br>from (select cust_id, sum(tot_amt) as cust_sum<br>from sales<br>group by cust_id ) c )<br>) d<br>where a.cust_id=d.cust_id</p>
+<p>–16、查找销售总额少于1000元的销售员编号、姓名和销售额<br>select emp_no,emp_name,d.sale_sum<br>from employee a,<br>(select sale_id,sale_sum<br>from (select sale_id, sum(tot_amt) as sale_sum<br>from sales<br>group by sale_id ) b<br>where b.sale_sum &lt;1000<br>) d<br>where a.emp_no=d.sale_id</p>
+<p>–17、查找至少销售了3种商品的客户编号、客户名称、商品编号、商品名称、数量和金额<br>select a.cust_id,cust_name,b.prod_id,prod_name,d.qty,d.qty*d.unit_price<br>from customer a, product b, sales c, sale_item d<br>where a.cust_id=c.cust_id and d.prod_id=b.prod_id and<br>c.order_no=d.order_no and a.cust_id in (<br>select cust_id<br>from (select cust_id,count(distinct prod_id) prodid<br>from (select cust_id,prod_id<br>from sales e,sale_item f<br>where e.order_no=f.order_no) g<br>group by cust_id<br>having count(distinct prod_id)&gt;=3) h )</p>
+<p>–18、查找至少与世界技术开发公司销售相同的客户编号、名称和商品编号、商品名称、数量和金额<br>select a.cust_id,cust_name,d.prod_id,prod_name,qty,qty<em>unit_price<br>from customer a, product b, sales c, sale_item d<br>where a.cust_id=c.cust_id and d.prod_id=b.prod_id and<br>c.order_no=d.order_no and not exists<br>(select f.</em><br>from customer x ,sales e, sale_item f<br>where cust_name=’世界技术开发公司’ and x.cust_id=e.cust_id and<br>e.order_no=f.order_no and not exists<br>( select g.*<br>from sale_item g, sales h<br>where g.prod_id = f.prod_id and g.order_no=h.order_no and<br>h.cust_id=a.cust_id)<br>)</p>
+<p>19、查找表中所有姓刘的职工的工号，部门，薪水<br>select emp_no,emp_name,dept,salary<br>from employee<br>where emp_name like ‘刘%’</p>
+<p>20、查找所有定单金额高于2000的所有客户编号<br>select cust_id<br>from sales<br>where tot_amt&gt;2000</p>
+<p>21、统计表中员工的薪水在4000-6000之间的人数<br>select count(*)as 人数<br>from employee<br>where salary between 4000 and 6000</p>
+<p>22、查询表中的同一部门的职工的平均工资，但只查询＂住址＂是＂上海市＂的员工<br>select avg(salary) avg_sal,dept<br>from employee<br>where addr like ‘上海市%’<br>group by dept</p>
+<p>23、将表中住址为”上海市”的员工住址改为”北京市”<br>update employee<br>set addr like ‘北京市’<br>where addr like ‘上海市’</p>
+<p>24、查找业务部或会计部的女员工的基本信息。<br>select emp_no,emp_name,dept<br>from employee<br>where sex=’F’and dept in (‘业务’,’会计’)</p>
+<p>25、显示每种产品的销售金额总和，并依销售金额由大到小输出。<br>select prod_id ,sum(qty<em>unit_price)<br>from sale_item<br>group by prod_id<br>order by sum(qty</em>unit_price) desc</p>
+<p>26、选取编号界于’C0001’和’C0004’的客户编号、客户名称、客户地址。<br>select CUST_ID,cust_name,addr<br>from customer<br>where cust_id between ‘C0001’ AND ‘C0004’</p>
+<p>27、计算出一共销售了几种产品。<br>select count(distinct prod_id) as ‘共销售产品数’<br>from sale_item</p>
+<p>28、将业务部员工的薪水上调3%。<br>update employee<br>set salary=salary*1.03<br>where dept=’业务’</p>
+<p>29、由employee表中查找出薪水最低的员工信息。<br>select *<br>from employee<br>where salary=<br>(select min(salary )<br>from employee )</p>
+<p>30、使用join查询客户姓名为”客户丙”所购货物的”客户名称”,”定单金额”,”定货日期”,”电话号码”<br>select a.cust_id,b.tot_amt,b.order_date,a.tel_no<br>from customer a join sales b<br>on a.cust_id=b.cust_id and cust_name like ‘客户丙’</p>
+<p>31、由sales表中查找出订单金额大于”E0013业务员在1996/10/15这天所接每一张订单的金额”的所有订单。<br>select *<br>from sales<br>where tot_amt&gt;all<br>(select tot_amt<br>from sales<br>where sale_id=’E0013’and order_date=’1996/10/15’)<br>order by tot_amt</p>
+<p>32、计算’P0001’产品的平均销售单价<br>select avg(unit_price)<br>from sale_item<br>where prod_id=’P0001’</p>
+<p>33、找出公司女员工所接的定单<br>select sale_id,tot_amt<br>from sales<br>where sale_id in<br>(select sale_id from employee<br>where sex=’F’)</p>
+<p>34、找出同一天进入公司服务的员工<br>select a.emp_no,a.emp_name,a.date_hired<br>from employee a<br>join employee b<br>on (a.emp_no!=b.emp_no and a.date_hired=b.date_hired)<br>order by a.date_hired</p>
+<p>35、找出目前业绩超过232000元的员工编号和姓名。<br>select emp_no,emp_name<br>from employee<br>where emp_no in<br>(select sale_id<br>from sales<br>group by sale_id<br>having sum(tot_amt)&lt;232000)</p>
+<p>36、查询出employee表中所有女职工的平均工资和住址在＂上海市＂的所有女职工的平均工资<br>select avg(salary)<br>from employee<br>where sex like ‘f’<br>union<br>select avg(salary)<br>from employee<br>where sex like ‘f’ and addr like ‘上海市%’</p>
+<p>37、在employee表中查询薪水超过员工平均薪水的员工信息。<br>Select *<br>from employee<br>where salary&gt;( select avg(salary)<br>from employee)</p>
+<p>38、找出目前销售业绩超过10000元的业务员编号及销售业绩，并按销售业绩从大到小排序。<br>Select sale_id ,sum(tot_amt)<br>from sales<br>group by sale_id<br>having sum(tot_amt)&gt;10000<br>order by sum(tot_amt) desc</p>
+<p>39、找出公司男业务员所接且订单金额超过2000元的订单号及订单金额。<br>Select order_no,tot_amt<br>From sales ,employee<br>Where sale_id=emp_no and sex=’M’ and tot_amt&gt;2000</p>
+<p>40、 查询sales表中订单金额最高的订单号及订单金额。<br>Select order_no,tot_amt from sales<br>where tot_amt=(select max(tot_amt) from sales)</p>
+<p>41、 查询在每张订单中订购金额超过4000元的客户名及其地址。<br>Select cust_name,addr from customer a,sales b<br>where a.cust_id=b.cust_id and tot_amt&gt;4000</p>
+<p>42、求出每位客户的总订购金额，显示出客户号及总订购金额，并按总订购金额降序排列。<br>Select cust_id,sum(tot_amt) from sales<br>Group by cust_id<br>Order by sum(tot_amt) desc</p>
+<p>43、求每位客户订购的每种产品的总数量及平均单价，并按客户号，产品号从小到大排列。<br>Select cust_id,prod_id,sum(qty),sum(qty*unit_price)/sum(qty)<br>From sales a, sale_item b<br>Where a.order_no=b.order_no<br>Group by cust_id,prod_id<br>Order by cust_id,prod_id</p>
+<p>44、 查询订购了三种以上产品的订单号。<br>Select order_no<br>from sale_item<br>Group by order_no<br>Having count(*)&gt;3</p>
+<p>45、 查询订购的产品至少包含了订单3号中所订购产品的订单。<br>Select distinct order_no<br>From sale_item a<br>Where order_no&lt;&gt;’3’and not exists (<br>Select <em> from sale_item b where order_no =’3’ and not exists<br>(select </em> from sale_item c where c.order_no=a.order_no and c.prod_id=b.prod_id))</p>
+<p>46、在sales表中查找出订单金额大于”E0013业务员在1996/11/10这天所接每一张订单的金额”的所有订单，并显示承接这些订单的业务员和该订单的金额。<br>Select sale_id,tot_amt from sales<br>where tot_amt&gt;all(select tot_amt<br>from sales<br>where sale_id=’E0013’ and order_date=’1996-11-10’)</p>
+<p>47、 查询末承接业务的员工的信息。<br>Select <em><br>From employee a<br>Where not exists<br>(select </em> from sales b where a.emp_no=b.sale_id)</p>
+<p>48、 查询来自上海市的客户的姓名，电话、订单号及订单金额。<br>Select cust_name,tel_no,order_no,tot_amt<br>From customer a ,sales b<br>Where a.cust_id=b.cust_id and addr=’上海市’</p>
+<p>49、查询每位业务员各个月的业绩，并按业务员编号、月份降序排序。<br>Select sale_id,month(order_date), sum(tot_amt)<br>from sales<br>group by sale_id,month(order_date)<br>order by sale_id,month(order_date) desc</p>
+<p>50、求每种产品的总销售数量及总销售金额，要求显示出产品编号、产品名称，总数量及总金额，并按产品号从小到大排列。<br>Select a.prod_id,prod_name,sum(qty),sum(qty*unit_price)<br>From sale_item a,product b<br>Where a.prod_id=b.prod_id<br>Group by a.prod_id,prod_name<br>Order by a.prod_id<br>51、查询总订购金额超过’C0002’客户的总订购金额的客户号，客户名及其住址。<br>Select cust_id, cust_name,addr<br>From customer<br>Where cust_id in (select cust_id from sales<br>Group by cust_id<br>Having sum(tot_amt)&gt;<br>(Select sum(tot_amt) from sales where cust_id=’C0002’))</p>
+<p>52、 查询业绩最好的的业务员号、业务员名及其总销售金额。<br>select emp_no,emp_name,sum(tot_amt)<br>from employee a,sales b<br>where a.emp_no=b.sale_id<br>group by emp_no,emp_name<br>having sum(tot_amt)=<br>(select max(totamt)<br>from (select sale_id,sum(tot_amt) totamt<br>from sales<br>group by sale_id) c)</p>
+<p>53、查询每位客户所订购的每种产品的详细清单，要求显示出客户号，客户名，产品号，产品名，数量及单价。<br>select a.cust_id, cust_name,c.prod_id,prod_name,qty, unit_price<br>from customer a,sales b, sale_item c ,product d<br>where a.cust_id=b.cust_id and b.order_no=c.order_no and c.prod_id=d.prod_id</p>
+<p>54、 求各部门的平均薪水，要求按平均薪水从小到大排序。<br>select dept,avg(salary)<br>from employee<br>group by dept<br>order by avg(salary)</p>
+<p>数据库常用命令</p>
+<p>查看表的结构：<br>desc tabletop800;   或     describe tabletop800;</p>
+<p>查看表的创建结构：<br>show create table tabletop800;</p>
+<p>修改表的字段类型<br>alter table tabletop800 change rating rating char(10);</p>
+<p>修改表的字段为 NOT NULL + Default<br>alter table tabletop800 change price price char(20) not null default ‘Free’;       // not null + default</p>
+<p>修改表的主键：<br> alter table tableop800 drop primary key;         // 先删除主键<br> alter table tabletop800 add primary key(id, country, dtime, price);       // 再添加主键</p>
+<p>更新表的字段值：<br>update tabletop800 set price=’Free’ where price=’’;    // 字段price为空的，全部设置为值“Free”</p>
+<hr>
+<p>导出数据库<br>mysqldump -u root top800 &gt; sql_database_bk/top800_database_bk_2011-10-22.sql</p>
+<p>导出数据库的表<br>mysqldump -u root top800 tabletop800 &gt; sql_database_bk/top800_tabletop800_table_bk_2011-10-22.sql </p>
+<hr>
+<p>导入数据库：<br>登录MySQL:      mysql -u root -p’123456’<br>创建数据库：    create database top800;<br>导入数据库：    mysql -u root -p’123456’ top800 &lt; top800_database_bk_2011-11-11.sql</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/09/29/sql以及MySQL的学习/" class="archive-article-date">
+  	<time datetime="2016-09-29T08:55:17.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-09-29</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mysql/">Mysql</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-angularJs的几个易错点" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/27/angularJs的几个易错点/">angularJs的几个易错点</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="AngularJS是目前最为活跃的Javascript框架之一，AngularJS的目标之一是简化开发过程，这使得AngularJS非常善于构建小型app原型，但AngularJS对于全功能的客户端应用程序同样强大，它结合了开发简便，特性广泛和出众的性能，使其被广泛使用。然而，大量使用也会产生诸多误区。以下这份列表摘取了常见的一些AngularJS的错误用法，尤其是在app开发过程中。"><a href="#AngularJS是目前最为活跃的Javascript框架之一，AngularJS的目标之一是简化开发过程，这使得AngularJS非常善于构建小型app原型，但AngularJS对于全功能的客户端应用程序同样强大，它结合了开发简便，特性广泛和出众的性能，使其被广泛使用。然而，大量使用也会产生诸多误区。以下这份列表摘取了常见的一些AngularJS的错误用法，尤其是在app开发过程中。" class="headerlink" title="AngularJS是目前最为活跃的Javascript框架之一，AngularJS的目标之一是简化开发过程，这使得AngularJS非常善于构建小型app原型，但AngularJS对于全功能的客户端应用程序同样强大，它结合了开发简便，特性广泛和出众的性能，使其被广泛使用。然而，大量使用也会产生诸多误区。以下这份列表摘取了常见的一些AngularJS的错误用法，尤其是在app开发过程中。"></a>AngularJS是目前最为活跃的Javascript框架之一，AngularJS的目标之一是简化开发过程，这使得AngularJS非常善于构建小型app原型，但AngularJS对于全功能的客户端应用程序同样强大，它结合了开发简便，特性广泛和出众的性能，使其被广泛使用。然而，大量使用也会产生诸多误区。以下这份列表摘取了常见的一些AngularJS的错误用法，尤其是在app开发过程中。</h4><h3 id="1-MVC目录结构"><a href="#1-MVC目录结构" class="headerlink" title="1. MVC目录结构"></a>1. MVC目录结构</h3><p>AngularJS，直白地说，就是一个MVC框架。它的模型并没有像backbone.js框架那样定义的如此明确，但它的体系结构却恰如其分。当你工作于一个MVC框架时，普遍的做法是根据文件类型对其进行归类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">templates/</div><div class="line">    _login.html</div><div class="line">    _feed.html</div><div class="line">app/</div><div class="line">    app.js</div><div class="line">    controllers/</div><div class="line">        LoginController.js</div><div class="line">        FeedController.js</div><div class="line">    directives/</div><div class="line">        FeedEntryDirective.js</div><div class="line">    services/</div><div class="line">        LoginService.js</div><div class="line">        FeedService.js</div><div class="line">    filters/</div><div class="line">        CapatalizeFilter.js</div></pre></td></tr></table></figure>
+<p>看起来，这似乎是一个显而易见的结构，更何况Rails也是这么干的。然而一旦app规模开始扩张，这种结构会导致你一次需要打开很多目录，无论你是使用sublime，Visual Studio或是Vim结合Nerd Tree，你都会投入很多时间在目录树中不断地滑上滑下。</p>
+<p>与按照类型划分文件不同，取而代之的，我们可以按照特性划分文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">app/</div><div class="line">    app.js</div><div class="line">    Feed/</div><div class="line">        _feed.html</div><div class="line">        FeedController.js</div><div class="line">        FeedEntryDirective.js</div><div class="line">        FeedService.js</div><div class="line">    Login/</div><div class="line">        _login.html</div><div class="line">        LoginController.js</div><div class="line">        LoginService.js</div><div class="line">    Shared/</div><div class="line">        CapatalizeFilter.js</div></pre></td></tr></table></figure>
+<p>这种目录结构使得我们能够更容易地找到与某个特性相关的所有文件，继而加快我们的开发进度。尽管将.html和.js文件置于一处可能存在争议，但节省下来的时间更有价值。</p>
+<h3 id="2-模块"><a href="#2-模块" class="headerlink" title="2. 模块"></a>2. 模块</h3><p>将所有东西都一股脑放在主模块下是很常见的，对于小型app，刚开始并没有什么问题，然而很快你就会发现坑爹的事来了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var app = angular.module(&apos;app&apos;,[]);</div><div class="line">app.service(&apos;MyService&apos;, function()&#123;</div><div class="line">    //service code</div><div class="line">&#125;);</div><div class="line">app.controller(&apos;MyCtrl&apos;, function($scope, MyService)&#123;</div><div class="line">    //controller code</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>在此之后，一个常见的策略是对相同类型的对象归类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var services = angular.module(&apos;services&apos;,[]);</div><div class="line">services.service(&apos;MyService&apos;, function()&#123;</div><div class="line">    //service code</div><div class="line">&#125;);</div><div class="line">var controllers = angular.module(&apos;controllers&apos;,[&apos;services&apos;]);</div><div class="line">controllers.controller(&apos;MyCtrl&apos;, function($scope, MyService)&#123;</div><div class="line">    //controller code</div><div class="line">&#125;);</div><div class="line">var app = angular.module(&apos;app&apos;,[&apos;controllers&apos;, &apos;services&apos;]);</div></pre></td></tr></table></figure>
+<p>这种方式和前面第一部分所谈到的目录结构差不多：不够好。根据相同的理念，可以按照特性归类，这会带来可扩展性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var sharedServicesModule = angular.module(&apos;sharedServices&apos;,[]);</div><div class="line">sharedServices.service(&apos;NetworkService&apos;, function($http)&#123;&#125;);</div><div class="line">var loginModule = angular.module(&apos;login&apos;,[&apos;sharedServices&apos;]);</div><div class="line">loginModule.service(&apos;loginService&apos;, function(NetworkService)&#123;&#125;);</div><div class="line">loginModule.controller(&apos;loginCtrl&apos;, function($scope, loginService)&#123;&#125;);</div><div class="line">var app = angular.module(&apos;app&apos;, [&apos;sharedServices&apos;, &apos;login&apos;]);</div></pre></td></tr></table></figure>
+<p>当我们开发一个大型应用程序时，可能并不是所有东西都包含在一个页面上。将同一类特性置于一个模块内，能使跨app间重用模块变得更容易。</p>
+<h3 id="3-依赖注入"><a href="#3-依赖注入" class="headerlink" title="3. 依赖注入"></a>3. 依赖注入</h3><p>依赖注入是AngularJS最好的模式之一，它使得测试更为简单，并且依赖任何指定对象都很明确。AngularJS的注入方式非常灵活，最简单的方式只需要将依赖的名字传入模块的function中即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var app = angular.module(&apos;app&apos;,[]);</div><div class="line">app.controller(&apos;MainCtrl&apos;, function($scope, $timeout)&#123;</div><div class="line">    $timeout(function()&#123;</div><div class="line">        console.log($scope);</div><div class="line">    &#125;, 1000);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>这里，很明显，MainCtrl依赖$scope和$timeout。</p>
+<p>直到你准备将其部署到生产环境并希望精简代码时，一切都很美好。如果使用UglifyJS，之前的例子会变成下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var app=angular.module(&quot;app&quot;,[]);</div><div class="line">app.controller(&quot;MainCtrl&quot;,function(e,t)&#123;t(function()&#123;console.log(e)&#125;,1e3)&#125;)</div></pre></td></tr></table></figure>
+<p>现在AngularJS怎么知道MainCtrl依赖谁？AngularJS提供了一种非常简单的解决方法，即将依赖作为一个数组传入，数组的最后一个元素是一个函数，所有的依赖项作为它的参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">app.controller(&apos;MainCtrl&apos;, [&apos;$scope&apos;, &apos;$timeout&apos;, function($scope, $timeout)&#123;</div><div class="line">    $timeout(function()&#123;</div><div class="line">        console.log($scope);</div><div class="line">    &#125;, 1000);</div><div class="line">&#125;]);</div></pre></td></tr></table></figure>
+<p>这样做能够精简代码，并且AngularJS知道如何解释这些明确的依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.controller(&quot;MainCtrl&quot;,[&quot;$scope&quot;,&quot;$timeout&quot;,function(e,t)&#123;t(function()&#123;console.log(e)&#125;,1e3)&#125;])</div></pre></td></tr></table></figure>
+<h4 id="3-1-全局依赖"><a href="#3-1-全局依赖" class="headerlink" title="3.1 全局依赖"></a>3.1 全局依赖</h4><p>在编写AngularJS程序时，时常会出现这种情况：某个对象有一个依赖，而这个对象又将其自身绑定在全局scope上，这意味着在任何AngularJS代码中这个依赖都是可用的，但这却破坏了依赖注入模型，并会导致一些问题，尤其体现在测试过程中。</p>
+<p>使用AngularJS可以很容易的将这些全局依赖封装进模块中，所以它们可以像AngularJS标准模块那样被注入进去。</p>
+<p>Underscrore.js是一个很赞的库，它可以以函数式的风格简化Javascript代码，通过以下方式，你可以将其转化为一个模块：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">var underscore = angular.module(&apos;underscore&apos;, []);</div><div class="line">underscore.factory(&apos;_&apos;, function() &#123;</div><div class="line">  return window._; //Underscore must already be loaded on the page</div><div class="line">&#125;);</div><div class="line">var app = angular.module(&apos;app&apos;, [&apos;underscore&apos;]);</div><div class="line">app.controller(&apos;MainCtrl&apos;, [&apos;$scope&apos;, &apos;_&apos;, function($scope, _) &#123;</div><div class="line">    init = function() &#123;</div><div class="line">          _.keys($scope);</div><div class="line">      &#125;</div><div class="line">      init();</div><div class="line">&#125;]);</div></pre></td></tr></table></figure>
+<p>这样的做法允许应用程序继续以AngularJS依赖注入的风格进行开发，同时在测试阶段也能将underscore交换出去。</p>
+<p>这可能看上去十分琐碎，没什么必要，但如果你的代码中正在使用use strict（而且必须使用），那这就是必要的了。</p>
+<h3 id="4-控制器膨胀"><a href="#4-控制器膨胀" class="headerlink" title="4. 控制器膨胀"></a>4. 控制器膨胀</h3><p>控制器是AngularJS的肉和土豆，一不小心就会将过多的逻辑加入其中，尤其是刚开始的时候。控制器永远都不应该去操作DOM，或是持有DOM选择器，那是我们需要使用指令和ng-model的地方。同样的，业务逻辑应该存在于服务中，而非控制器。</p>
+<p>数据也应该存储在服务中，除非它们已经被绑定在$scope上了。服务本身是单例的，在应用程序的整个生命周期都存在，然而控制器在应用程序的各状态间是瞬态的。如果数据被保存在控制器中，当它被再次实例化时就需要重新从某处获取数据。即使将数据存储于localStorage中，检索的速度也要比Javascript变量慢一个数量级。</p>
+<p>AngularJS在遵循单一职责原则（SRP）时运行良好，如果控制器是视图和模型间的协调者，那么它所包含的逻辑就应该尽量少，这同样会给测试带来便利。</p>
+<h3 id="5-Service-vs-Factory"><a href="#5-Service-vs-Factory" class="headerlink" title="5. Service vs Factory"></a>5. Service vs Factory</h3><p>几乎每一个AngularJS开发人员在初学时都会被这些名词所困扰，这真的不太应该，因为它们就是针对几乎相同事物的语法糖而已！</p>
+<p>以下是它们在AngularJS源代码中的定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">function factory(name, factoryFn) &#123;</div><div class="line">    return provider(name, &#123; $get: factoryFn &#125;);</div><div class="line">&#125;</div><div class="line">function service(name, constructor) &#123;</div><div class="line">    return factory(name, [&apos;$injector&apos;, function($injector) &#123;</div><div class="line">      return $injector.instantiate(constructor);</div><div class="line">    &#125;]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从源代码中你可以看到，service仅仅是调用了factory函数，而后者又调用了provider函数。事实上，AngularJS也为一些值、常量和装饰提供额外的provider封装，而这些并没有导致类似的困惑，它们的文档都非常清晰。</p>
+<p>由于service仅仅是调用了factory函数，这有什么区别呢？线索在$injector.instantiate：在这个函数中，$injector在service的构造函数中创建了一个新的实例。</p>
+<p>以下是一个例子，展示了一个service和一个factory如何完成相同的事情：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var app = angular.module(&apos;app&apos;,[]);</div><div class="line">app.service(&apos;helloWorldService&apos;, function()&#123;</div><div class="line">    this.hello = function() &#123;</div><div class="line">        return &quot;Hello World&quot;;</div><div class="line">    &#125;;</div><div class="line">&#125;);</div><div class="line">app.factory(&apos;helloWorldFactory&apos;, function()&#123;</div><div class="line">    return &#123;</div><div class="line">        hello: function() &#123;</div><div class="line">            return &quot;Hello World&quot;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>当helloWorldService或helloWorldFactory被注入到控制器中，它们都有一个hello方法，返回”hello world”。service的构造函数在声明时被实例化了一次，同时factory对象在每一次被注入时传递，但是仍然只有一个factory实例。所有的providers都是单例。</p>
+<p>既然能做相同的事，为什么需要两种不同的风格呢？相对于service，factory提供了更多的灵活性，因为它可以返回函数，这些函数之后可以被新建出来。这迎合了面向对象编程中工厂模式的概念，工厂可以是一个能够创建其他对象的对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">app.factory(&apos;helloFactory&apos;, function() &#123;</div><div class="line">    return function(name) &#123;</div><div class="line">        this.name = name;</div><div class="line">        this.hello = function() &#123;</div><div class="line">            return &quot;Hello &quot; + this.name;</div><div class="line">        &#125;;</div><div class="line">    &#125;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>这里是一个控制器示例，使用了service和两个factory，helloFactory返回了一个函数，当新建对象时会设置name的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">app.controller(&apos;helloCtrl&apos;, function($scope, helloWorldService, helloWorldFactory, helloFactory) &#123;</div><div class="line">    init = function() &#123;</div><div class="line">      helloWorldService.hello(); //&apos;Hello World&apos;</div><div class="line">      helloWorldFactory.hello(); //&apos;Hello World&apos;</div><div class="line">      new helloFactory(&apos;Readers&apos;).hello() //&apos;Hello Readers&apos;</div><div class="line">    &#125;</div><div class="line">    init();</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>在初学时，最好只使用service。</p>
+<p>Factory在设计一个包含很多私有方法的类时也很有用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">app.factory(&apos;privateFactory&apos;, function()&#123;</div><div class="line">    var privateFunc = function(name) &#123;</div><div class="line">        return name.split(&quot;&quot;).reverse().join(&quot;&quot;); //reverses the name</div><div class="line">    &#125;;</div><div class="line">    return &#123;</div><div class="line">        hello: function(name)&#123;</div><div class="line">          return &quot;Hello &quot; + privateFunc(name);</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>通过这个例子，我们可以让privateFactory的公有API无法访问到privateFunc方法，这种模式在service中是可以做到的，但在factory中更容易。</p>
+<h3 id="6-没有使用Batarang"><a href="#6-没有使用Batarang" class="headerlink" title="6. 没有使用Batarang"></a>6. 没有使用Batarang</h3><p>Batarang是一个出色的Chrome插件，用来开发和测试AngularJS app。</p>
+<p>Batarang提供了浏览模型的能力，这使得我们有能力观察AngularJS内部是如何确定绑定到作用域上的模型的，这在处理指令以及隔离一定范围观察绑定值时非常有用。</p>
+<p>Batarang也提供了一个依赖图， 如果我们正在接触一个未经测试的代码库，这个依赖图就很有用，它能决定哪些服务应该被重点关照。</p>
+<p>最后，Batarang提供了性能分析。Angular能做到开包即用，性能良好，然而对于一个充满了自定义指令和复杂逻辑的应用而言，有时候就不那么流畅了。使用Batarang性能工具，能够直接观察到在一个digest周期中哪个函数运行了最长时间。性能工具也能展示一棵完整的watch树，在我们拥有很多watcher时，这很有用。</p>
+<h3 id="7-过多的watcher"><a href="#7-过多的watcher" class="headerlink" title="7. 过多的watcher"></a>7. 过多的watcher</h3><p>在上一点中我们提到，AngularJS能做到开包即用，性能良好。由于需要在一个digest周期中完成脏数据检查，一旦watcher的数量增长到大约2000时，这个周期就会产生显著的性能问题。<br>以下这个“立即执行的函数表达式(IIFE)”会打印出当前页面上所有的watcher的个数，你可以简单的将其粘贴到控制台中，观察结果。这段IIFE来源于Jared在StackOverflow上的回答：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">(function () &#123;</div><div class="line">    var root = $(document.getElementsByTagName(&apos;body&apos;));</div><div class="line">    var watchers = [];</div><div class="line">    var f = function (element) &#123;</div><div class="line">        if (element.data().hasOwnProperty(&apos;$scope&apos;)) &#123;</div><div class="line">            angular.forEach(element.data().$scope.$$watchers, function (watcher) &#123;</div><div class="line">                watchers.push(watcher);</div><div class="line">            &#125;);</div><div class="line">        &#125;</div><div class="line">        angular.forEach(element.children(), function (childElement) &#123;</div><div class="line">            f($(childElement));</div><div class="line">        &#125;);</div><div class="line">    &#125;;</div><div class="line">    f(root);</div><div class="line">    console.log(watchers.length);</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>通过这个方式得到watcher的数量，结合Batarang性能板块中的watch树，应该可以看到哪里存在重复代码，或着哪里存在不变数据同时拥有watch。</p>
+<p>当存在不变数据，而你又想用AngularJS将其模版化，可以考虑使用bindonce。Bindonce是一个简单的指令，允许你使用AngularJS中的模版，但它并不会加入watch，这就保证了watch数量不会增长。</p>
+<h3 id="8-限定-scope的范围"><a href="#8-限定-scope的范围" class="headerlink" title="8. 限定$scope的范围"></a>8. 限定$scope的范围</h3><p>Javascript基于原型的继承与面向对象中基于类的继承有着微妙的区别，这通常不是什么问题，但这个微妙之处在使用$scope时就会表现出来。在AngularJS中，每个$scope都会继承父$scope，最高层称之为$rootScope。（$scope与传统指令有些不同，它们有一定的作用范围i，且只继承显式声明的属性。）</p>
+<p>由于原型继承的特点，在父类和子类间共享数据不太重要，不过如果不小心的话，也很容易误用了一个父$scope的属性。</p>
+<p>比如说，我们需要在一个导航栏上显示一个用户名，这个用户名是在登录表单中输入的，下面这种尝试应该是能工作的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;div ng-controller=&quot;navCtrl&quot;&gt;</div><div class="line">   &lt;span&gt;&#123;&#123;user&#125;&#125;&lt;/span&gt;</div><div class="line">   &lt;div ng-controller=&quot;loginCtrl&quot;&gt;</div><div class="line">        &lt;span&gt;&#123;&#123;user&#125;&#125;&lt;/span&gt;</div><div class="line">        &lt;input ng-model=&quot;user&quot;&gt;&lt;/input&gt;</div><div class="line">   &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div><div class="line">那么问题来了……：在text input中设置了user的ng-model，当用户在其中输入内容时，哪个模版会被更新？navCtrl还是loginCtrl，还是都会？</div><div class="line"></div><div class="line">如果你选择了loginCtrl，那么你可能已经理解了原型继承是如何工作的了。</div><div class="line"></div><div class="line">当你检索字面值时，原型链并不起作用。如果navCtrl也同时被更新的话，检索原型链是必须的；但如果值是一个对象，这就会发生。（记住，在Javascript中，函数、数组和对象都是对象）</div><div class="line"></div><div class="line">所以为了获得预期的行为，需要在navCtrl中创建一个对象，它可以被loginCtrl引用。</div></pre></td></tr></table></figure>
+<p><div ng-controller="navCtrl"><br>   <span></span><br>   <div ng-controller="loginCtrl"><br>        <span></span><br>        <input ng-model="user.name"><br>   </div><br></div><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">现在，由于user是一个对象，原型链就会起作用，navCtrl模版和$scope和loginCtrl都会被更新。</div><div class="line"></div><div class="line">这看上去是一个很做作的例子，但是当你使用某些指令去创建子$scope，如ngRepeat时，这个问题很容易就会产生。</div></pre></td></tr></table></figure></p>
+<h3 id="9-手工测试"><a href="#9-手工测试" class="headerlink" title="9. 手工测试"></a>9. 手工测试</h3><p>由于TDD可能不是每个开发人员都喜欢的开发方式，因此当开发人员检查代码是否工作或是否影响了其它东西时，他们会做手工测试。</p>
+<p>不去测试AngularJS app，这是没有道理的。AngularJS的设计使得它从头到底都是可测试的，依赖注入和ngMock模块就是明证。AngularJS核心团队已经开发了众多能够使测试更上一层楼的工具。<br>```</p>
+<h4 id="9-1-Protractor"><a href="#9-1-Protractor" class="headerlink" title="9.1 Protractor"></a>9.1 Protractor</h4><p>单元测试是一个测试工作的基础，但考虑到app的日益复杂，集成测试更贴近实际情况。幸运的是，AngularJS的核心团队已经提供了必要的工具。</p>
+<p>我们已经建立了Protractor，一个端到端的测试器用以模拟用户交互，这能够帮助你验证你的AngularJS程序的健康状况。</p>
+<p>Protractor使用Jasmine测试框架定义测试，Protractor针对不同的页面交互行为有一个非常健壮的API。</p>
+<p>我们还有一些其他的端到端测试工具，但是Protractor的优势是它能够理解如何与AngularJS代码协同工作，尤其是在$digest周期中。</p>
+<h4 id="9-2-Karma"><a href="#9-2-Karma" class="headerlink" title="9.2 Karma"></a>9.2 Karma</h4><p>一旦我们用Protractor完成了集成测试的编写工作，接下去就是执行测试了。等待测试执行，尤其是集成测试，对每个开发人员都是一种淡淡的忧伤。AngularJS的核心团队也感到极为蛋疼，于是他们开发了Karma。</p>
+<p>Karma是一个测试器，它有助于关闭反馈回路。Karma之所以能够做到这点，是因为它在指定文件被改变时就运行测试。Karma同时也会在多个浏览器上运行测试，不同的设备也可以指向Karma服务器，这样就能够更好地覆盖真实世界的应用场景。</p>
+<h3 id="10-使用jQuery"><a href="#10-使用jQuery" class="headerlink" title="10. 使用jQuery"></a>10. 使用jQuery</h3><p>jQuery是一个酷炫的库，它有标准化的跨平台开发，几乎已经成为了现代化Web开发的必需品。不过尽管JQuery如此多的优秀特性，它的理念和AngularJS并不一致。</p>
+<p>AngularJS是一个用来建立app的框架，而JQuery则是一个简化“HTML文档操作、事件处理、动画和Ajax”的库。这是两者最基本的区别，AngularJS致力于程序的体系结构，与HTML页面无关。</p>
+<p>为了更好的理解如何建立一个AngularJS程序，请停止使用jQuery。JQuery使开发人员以现存的HTML标准思考问题，但正如文档里所说的，“AngularJS能够让你在应用程序中扩张HTML这个词汇”。</p>
+<p>DOM操作应该只在指令中完成，但这并不意味着他们只能用JQuery封装。在你使用JQuery之前，你应该总是去想一下这个功能是不是AngularJS已经提供了。当指令互相依赖时能够创建强大的工具，这确实很强大。</p>
+<p>但一个非常棒的JQuery是必需品时，这一天可能会到来，但在一开始就引入它，是一个常见的错误。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>AngularJS是一卓越的框架，在社区的帮助下始终在进步。虽说AngularJS仍然是一个不断发展的概念，但我希望人们能够遵循以上谈到的这些约定，避免开发AngularJS应用所遇到的那些问题。</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/09/27/angularJs的几个易错点/" class="archive-article-date">
+  	<time datetime="2016-09-27T06:28:17.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-09-27</time>
+</a>
+      
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-i-have-a-new-home" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -322,7 +802,7 @@ MathJax.Hub.Queue(function() {
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				
+    				<a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/nodejs-回调异步/" style="font-size: 10px;">nodejs 回调异步</a> <a href="/tags/性能-javascript/" style="font-size: 10px;">性能　javascript</a>
     			</div>
     	</section>
     

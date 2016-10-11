@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>javascript 异步,回调,事件循环 | 泥匠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="详解回调函数——以JS为例解读异步、回调和EventLoop回调，是非常基本的概念，尤其在现今NodeJS诞生与蓬勃发展中变得更加被人们重视。本质上说不理解回调，就不理解NodeJS。
+NodeJS有三大核心： 
+
+CallBack回调 
+Event事件 
+Stream流
+
+先来看什么不叫回调，下面是很多人误认为的回调：
+123456789101112131415//代码示例1//Foo函数意在接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript 异步,回调,事件循环">
+<meta property="og:url" content="http://zekunruan.github.io/2016/10/06/javascript-异步-回调-事件循环/index.html">
+<meta property="og:site_name" content="泥匠">
+<meta property="og:description" content="详解回调函数——以JS为例解读异步、回调和EventLoop回调，是非常基本的概念，尤其在现今NodeJS诞生与蓬勃发展中变得更加被人们重视。本质上说不理解回调，就不理解NodeJS。
+NodeJS有三大核心： 
+
+CallBack回调 
+Event事件 
+Stream流
+
+先来看什么不叫回调，下面是很多人误认为的回调：
+123456789101112131415//代码示例1//Foo函数意在接">
+<meta property="og:updated_time" content="2016-10-10T08:30:16.856Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript 异步,回调,事件循环">
+<meta name="twitter:description" content="详解回调函数——以JS为例解读异步、回调和EventLoop回调，是非常基本的概念，尤其在现今NodeJS诞生与蓬勃发展中变得更加被人们重视。本质上说不理解回调，就不理解NodeJS。
+NodeJS有三大核心： 
+
+CallBack回调 
+Event事件 
+Stream流
+
+先来看什么不叫回调，下面是很多人误认为的回调：
+123456789101112131415//代码示例1//Foo函数意在接">
+  
+    <link rel="alternative" href="/atom.xml" title="泥匠" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//favicon.png">
+  
+  <script src="/style.js"></script>
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="null" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zekun ruan</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">一笔一划。</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/tags/随笔">随笔</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">友链</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="3" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="#" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="#" title="rss">rss</a>
+		        
+					<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">zekun ruan</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="null" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zekun ruan</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">一笔一划。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/tags/随笔">随笔</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-javascript-异步-回调-事件循环" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      javascript 异步,回调,事件循环
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="详解回调函数——以JS为例解读异步、回调和EventLoop"><a href="#详解回调函数——以JS为例解读异步、回调和EventLoop" class="headerlink" title="详解回调函数——以JS为例解读异步、回调和EventLoop"></a>详解回调函数——以JS为例解读异步、回调和EventLoop</h4><p>回调，是非常基本的概念，尤其在现今NodeJS诞生与蓬勃发展中变得更加被人们重视。本质上说不理解回调，就不理解NodeJS。</p>
+<p>NodeJS有三大核心： </p>
+<ul>
+<li>CallBack回调 </li>
+<li>Event事件 </li>
+<li>Stream流</li>
+</ul>
+<p>先来看什么不叫回调，下面是很多人误认为的回调：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//代码示例1</div><div class="line">//Foo函数意在接收两个参数，任意类型a，和函数类型cb，在结尾要调用cb()</div><div class="line">function Foo(a, cb)&#123;</div><div class="line">    console.log(a);</div><div class="line">    // do something else</div><div class="line">    // Maybe get some parameters for cb</div><div class="line">    var param = Math.random();</div><div class="line">    cb(param);</div><div class="line">&#125;</div><div class="line">//定义一个叫CallBack的函数，将作为参数传给Foo</div><div class="line">var CallBack = function(num)&#123;</div><div class="line">    console.log(num);</div><div class="line">&#125;</div><div class="line">//调用Foo</div><div class="line">Foo(2, CallBack);</div></pre></td></tr></table></figure>
+<p>以上代码不是回调，以下指出这里哪些概念容易混淆： </p>
+<ul>
+<li>变量CallBack，被赋值为一个匿名函数，但是不因为它名字叫CallBack，就称知为回调 </li>
+<li>Foo函数的第二个形式参数名为cb，同理叫cb，和是不是回调没关系 </li>
+<li>cb在Foo函数代码最后被以cb(param)的形式调用，不因为cb在另一个函数中被调用，而将其称之为回调</li>
+</ul>
+<p>直白来讲，以上代码就是普通的函数调用，唯一特殊一点的地方是，因为JS有函数式语言的特性，可以接收函数作为参数。在C语言里可以用指向函数的指针来达到类似效果。</p>
+<p>讲到这里先停一下，大家注意到本文的标题是解读异步、回调和EventLoop，回调之前还有异步呢，这个顺序对于理解很有帮助，可以说理解回调的前提，是理解异步。</p>
+<p>说到异步，什么是异步呢？和分布、并行有什么区别？</p>
+<p>回归原始，追根溯源是我们学习编程的好方法，不去想有什么高级的工具和概念，而去想如果我们只有一个浏览器做编译器和一个记事本，用plain JS写一段异步代码，怎么写？不能用事件系统，不能用浏览器特性。</p>
+<p>小明：刚才上面那段代码是异步的吗？<br>老袁：当然不是，即便把Foo改为AsyncFoo也不是。这里比较迷惑的是cb(param)是在Foo函数的最后被调用的。<br>小明：好像觉得异步的代码，确实应该在最后调一个callback函数，因为之后的代码不会被执行到了。<br>老袁：异步的一个定义是函数调用不返回原来代码调用处，而cb(params)调用完后，依旧返回到Foo的尾部，即便cb(params)后还有代码，它们也可以被执行到，这是个同步调用。</p>
+<p>Plain JS 异步的写法有很多，以经典的为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">//代码示例2</div><div class="line">// ====同步的加法</div><div class="line">function Add(a, b)&#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div><div class="line">Add(1, 2) // =&gt; 3</div><div class="line"></div><div class="line">// ====异步的加法</div><div class="line">function LazyAdd(a)&#123;</div><div class="line">    return function(b)&#123;</div><div class="line">        return a+b;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">var result = LazyAdd(1); // result等于一个匿名函数，实际是闭包</div></pre></td></tr></table></figure>
+<p>上述代码展示了，最简单的异步。我们要强调的事，异步是异步，回调是回调，他俩半毛钱关系都没有。</p>
+<p>Ok，下面把代码改一改，看什么叫回调：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//代码示例3</div><div class="line">//注意还是那个Add，精髓也在这里，随后说到</div><div class="line">function Add(a, b)&#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div><div class="line">//LazyAdd改变了，多了一个参数cb</div><div class="line">function LazyAdd(a, cb)&#123;</div><div class="line">    return function(b)&#123;</div><div class="line">        cb(a, b);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">//将Add传给形参cb</div><div class="line">var result = LazyAdd(1, Add)</div><div class="line">// doing something else</div><div class="line">result = result(2); // =&gt; 3</div></pre></td></tr></table></figure></p>
+<p>这段代码，看似简单，实则并不平凡。</p>
+<p>小明：这代码给人的第一感觉就是脱裤子放屁，明明一个a+b，先是变成异步的写法就多了很多代码，人都看不懂了，现在的这个加了所谓的“回调”，更啰嗦了，最后得到的结果都是1+2=3，尼玛这不有病吗？<br>老袁：你只看到了结果，却不知道为什么人家这么写，这样写为了什么。代码示例2和3中，同样的Add函数，作为参数传到LazyAdd中，此时它是回调。那为什么代码示例1中，Foo中传入的cb不是回调呢？要仔细体会这句话，需要带状态的才叫回调函数，own state，这里通过闭包保存的a就是状态。<br>小明：我伙呆<br>老袁：现在再说为什么要有回调，单看输出结果，回调除了啰嗦和难于理解之外没有任何意义。但是！！！</p>
+<p>现在说吧，CallBack的好处是：保证API不撕裂<br>也就是说，异步是很有需求的，处理的好能使计算效率提高，不至于卡在某处一直等待。但是异步的写法，我们看到了非常难看，把一个加法变成异步，都如此难看，何况其他。那么CallBack的妙处就是“保证API不撕裂”，代码中写到的精髓所在，还是那个Add，对，让程序员在写异步程序的时候，还能够像同步写法那样好理解，Add作为CallBack传入，保证的是Add这个方法好理解，作为API设计中的重要一个环节，保证开发者用起来方便，代码可读性高。</p>
+<p>以NodeJS的readFile API为例进一步说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fs.readFile(filename, [options], callback)</div></pre></td></tr></table></figure></p>
+<p>有两个必填的参数filename和callback<br>callback是实际程序员要写代码的地方，写它的时候假设文件已经读取到了，该怎么写还怎么写，是API历史上的一次大进步。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//读取文件&apos;etc/passwd&apos;,读取完成后将返回值，传入function(err, data) 这个回调函数。</div><div class="line">fs.readFile(&apos;/etc/passwd&apos;, function (err, data) &#123;</div><div class="line">  if (err) throw err;</div><div class="line">  console.log(data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h4 id="回调和闭包有一个共同的特性：在最终“回调-”调用以前，前面所有的状态都得存着。"><a href="#回调和闭包有一个共同的特性：在最终“回调-”调用以前，前面所有的状态都得存着。" class="headerlink" title="回调和闭包有一个共同的特性：在最终“回调 ”调用以前，前面所有的状态都得存着。"></a>回调和闭包有一个共同的特性：在最终“回调 ”调用以前，前面所有的状态都得存着。</h4><p>这段代码对于人们的疑惑常常是，我怎么知道callback要接收几个参数，参数的类型是什么？<br>答：是API提供者事先设计好的，它需要在文档中说明callback接收什么参数。</p>
+<p>如代码3展示的那样，API设计者通过种种技巧，实现了回调的形式，这种种技巧写起来很痛苦。而fs.readFile看起来写的很轻巧，这是因为它不光包含异步、回调，还引入的新的概念EventLoop。</p>
+<p>EventLoop是很早前就有的概念，如MFC中的消息循环，浏览器中的事件机制等等。</p>
+<p>那为什么要有EventLoop，它的目的是什么呢？</p>
+<p>我们用一个简单的伪示例，看没有EventLoop时是怎么工作：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">//代码示例4</div><div class="line">function Add(a, b)&#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function LazyAdd(a, cb)&#123;</div><div class="line">    return function(b)&#123;</div><div class="line">        cb(a, b);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var result = LazyAdd(1, Add)</div><div class="line">// 假设有一个变量button为false，我们继续调用result的条件是，当button为true的时候。</div><div class="line">var button = false;</div><div class="line"></div><div class="line">// 常用的办法是观察者模式，派一个人不断的看button的值，</div><div class="line">//只要变了就开始执行result(2), 当然得有别人去改变button的值，</div><div class="line">//这里假设有人有这个能力,比如起了另外一个线程去做。</div><div class="line">while(true)&#123;</div><div class="line">    if(button)&#123;</div><div class="line">        result = result(2);</div><div class="line">        break;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">result = result(2); // =&gt; 3</div></pre></td></tr></table></figure></p>
+<p>所以如果有很多这样的函数，每一个都要跑一个观察者模式，在一定条件下看上去比较费计算。这时EventLoop诞生了，派一个人来轮询所有的，其他人都可以把观察条件和回调函数注册在EventLoop上，它进行统一的轮询，注册的人越多，轮询一圈的时间越长。但是简化了编程，不用每个人都写轮询了，提供API变得方便，就像fs.readFile一样简单明白，fs.readFile读取文件’/etc/passwd’，将其注册到EventLoop上，当文件读取完毕的时候，EventLoop通过轮询感知到它，并调用readFile注册时带的回调函数，这里是funtion(err, data)</p>
+<p>换一个说法再说一遍：在特定条件下，单台机器上用空间换计算。原本callback执行了就不等了，存在一个地方，其他依赖它的，用观察着模式一直盯着它，各自轮询各自的。现在有人出来替大家统一轮询。<br>再换一个说法说一遍，重要的事情，换着方法说3遍：在单台机器上，统一轮询看上去比较省，也带来了很多问题，比如NodeJS中单线程情况下，如果一个函数计算量非常复杂，会阻碍所有其他的事件，所以这种情况要将复杂计算交给其他线程或者是服务来做。<br>我们一直在强调单台机器，如果是多台，用一个统一的人来轮询，就比较恐怖了，大家把事件都注册到一台机器上，它负责轮询所有的，这个namenode就容易崩溃。所以在多台机器上，又适合，每天机器各自轮询各自的，带来的问题是状态不一致了。好的，这才是程序有意思的地方，我们需要知道为什么发明EventLoop，也需要知道EventLoop在什么地方遇到问题。那些天才的程序员，又提出了各种一致性算法来解决这个问题，本文暂不讨论。</p>
+<p>到目前为止，我们梳理了他们之间的关系：<br>异步 –&gt; 回调 –&gt; EventLoop<br>每一次进步都是上一个台阶，都需要智慧来解决。</p>
+<p>回调还产生了很多问题，最严重的问题是callback hell回调地狱。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">fs.readFile(&apos;/etc/password&apos;, function(err, data)&#123;</div><div class="line">    // do something</div><div class="line">    fs.readFile(&apos;xxxx&apos;, function(err, data)&#123;</div><div class="line">        //do something</div><div class="line">            fs.readFile(&apos;xxxxx&apos;, function(err, data)&#123;</div><div class="line">            // do something</div><div class="line">        &#125;)</div><div class="line">    &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>这个例子可能不恰当，但也能理解，在类似这种情况会出现一层套一层的代码，可读性、维护性差。</p>
+<p>在ES6 里面给出了Generator，来解决异步编程的问题。`</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/10/06/javascript-异步-回调-事件循环/" class="archive-article-date">
+  	<time datetime="2016-10-05T17:39:41.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-10-06</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs-回调异步/">nodejs 回调异步</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2016/10/10/回流与重绘/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          回流与重绘
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/29/sql以及MySQL的学习/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">sql以及MySQL的学习</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 zekun ruan
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: "/"
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+      <li data-hook="tools-section-friends"><span class="text">友链</span><i class="icon-link"></i></li>
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/nodejs-回调异步/" style="font-size: 10px;">nodejs 回调异步</a> <a href="/tags/性能-javascript/" style="font-size: 10px;">性能　javascript</a>
+    			</div>
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-friends">
+  		
+  			<div class="friends-wrap" id="js-friends">
+  			
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接1</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接2</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接3</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接4</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接5</a>
+  	        
+  	          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">友情链接6</a>
+  	        
+  	        </div>
+  		
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
